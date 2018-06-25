@@ -1,0 +1,88 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<GllavicaInventari.Models.Transfer>
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Te gjitha transfertat";
+}
+
+<a class="btn btn-success btn-rounded waves-effect waves-light pull-right" asp-action="Create">
+    <span class="btn-label"><i class="fa fa-plus"></i></span>
+    Krijo transfertë
+</a>
+<h2>Te gjitha transfertat</h2>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card-box table-responsive">
+            <h4 class="m-t-0 header-title">Lista e transfertave</h4>
+            <p class="text-muted font-14 m-b-30">
+                Kjo eshte lista e te gjithe tranfertave që ju keni bërë.
+            </p>
+
+            <table id="TransfersTable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Kodi T. </th>
+                        <th>Data </th>
+                        <th>Nga magazina </th>
+                        <th>Tek magazina </th>
+                        <th>Produkti </th>
+                        <th>Sasia </th>
+                        <th>Cmimi </th>
+                        <th>Vlera Totale</th>
+                        <th class="text-center">Veprime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TransferCode)
+                            </td>
+                            <td>
+                                @item.DateTranfer.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FromWareHouse.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ToWareHouse.Name)
+                            </td>
+                            <td>
+                                @item.Product.Title
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Amount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalValue)
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Details" asp-route-id="@item.Id"
+                                   class="btn btn-icon waves-effect waves-light btn-success">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id"
+                                   class="btn btn-icon waves-effect waves-light btn-default">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       class="btn btn-icon waves-effect waves-light btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

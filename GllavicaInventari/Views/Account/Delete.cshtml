@@ -1,0 +1,42 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Fshirja e një perdoruesi";
+}
+
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek perdoruesit
+</a>
+<h2>Fshirja e perdoruesit : <span class="text-danger">@Model.FirstName @Model.LastName</span> </h2>
+
+<div class="visible-lg" style="height: 25px;"></div>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="card-box">
+            <div class="visible-lg" style="height: 10px;"></div>
+
+            <div class="text-center">
+                <h2>
+                    Ky perdorues eshte pergjegjes per magazinen/-at:
+                </h2>
+                
+                @foreach (var wareHouse in Model.Warehouses)
+                {
+                    <h1 class="text-danger">@wareHouse.Name</h1>
+                }
+
+            </div>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <p class="text-center">
+                    <button asp-action="Index" class="confirm btn btn-lg btn-default" tabindex="1" style="display: inline-block;"> <i class="fa fa-arrow-left"></i> Kthehu </button>
+                    <button type="submit" class="cancel btn btn-lg btn-danger" tabindex="2" style="display: inline-block;"> <i class="fa fa-trash"></i> Konfirmo </button>
+                </p>
+            </form>
+            <div class="visible-lg" style="height: 10px;"></div>
+        </div>
+    </div>
+</div>

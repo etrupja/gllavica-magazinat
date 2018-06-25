@@ -1,0 +1,177 @@
+﻿@model GllavicaInventari.ViewModels.WarehouseViewModel
+@{
+    ViewData["Title"] = "Detajet e Magazines";
+}
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek magazinat
+</a>
+
+<h3 class="m-t-0 m-b-30 text-center"><span class="text-success">"@Model.Name" </span> nga data <span class="text-success">@ViewBag.DateStart.ToString("dd/MM/yyyy")</span> deri në datën <span class="text-success">@ViewBag.DateEnd.ToString("dd/MM/yyyy")</span> </h3>
+
+<div class="row">
+    <div class="col-lg-12 col-xl-4">
+        <div class="card-box">
+            <h4 class=" header-title m-t-0 m-b-30">Detajet</h4>
+            <input type="hidden" id="wareHouseDetailsId" asp-for="Id" />
+            <p id="date_filter">
+                <span class="ti-calendar"></span> Nga data <input class="datepicker" type="text" id="datepicker_from" value="@ViewBag.DateStart.ToString("MM-dd-yyyy")" />
+                - deri
+                <span class="ti-calendar"></span>  <input class="datepicker" type="text" id="datepicker_to" value="@ViewBag.DateEnd.ToString("MM-dd-yyyy")" />
+            </p>
+            <table id="DetailsTable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nr. i serisë</th>
+                        <th>Produkti</th>
+                        <th>Furnitori </th>
+                        <th>Hyrje/Dalje</th>
+                        <th>Njesia</th>
+                        <th>Sasia</th>
+                        <th>Cmimi</th>
+                        <th>Vlera totale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Entries)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SerialNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Supplier.Name)
+                        </td>
+                        <td>
+                            <span class="label label-success">Hyrje</span>
+                            @switch ((DateTime.UtcNow.AddHours(2).Date - item.DateEntry.Date).TotalDays)
+                            {
+                                case 0:
+                                    <span>Sot</span>;
+                                    break;
+                                case 1:
+                                    <span>Dje</span>;
+                                    break;
+                                case 2:
+                                    <span>Pardje</span>;
+                                    break;
+                                default:
+                                    <span>Para @((DateTime.UtcNow.AddHours(2).Date - item.DateEntry.Date).TotalDays) ditësh</span>;
+                                    break;
+                            }
+                            ( @item.DateEntry.ToString("dd/MM/yyyy HH:mm"))
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.Unit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalValue)
+                        </td>
+                    </tr>
+                    }
+                    @foreach (var item in Model.Exits)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SerialNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Supplier.Name)
+                        </td>
+                        <td>
+                            <span class="label label-danger">Dalje</span>
+                            @switch ((DateTime.UtcNow.AddHours(2).Date - item.DateExit.Date).TotalDays)
+                            {
+                                case 0:
+                                    <span>Sot</span>;
+                                    break;
+                                case 1:
+                                    <span>Dje</span>;
+                                    break;
+                                case 2:
+                                    <span>Pardje</span>;
+                                    break;
+                                default:
+                                    <span>Para @((DateTime.UtcNow.AddHours(2).Date - item.DateExit.Date).TotalDays) ditësh</span>;
+                                    break;
+                            }
+                            ( @item.DateExit.ToString("dd/MM/yyyy HH:mm"))
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.Unit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalValue)
+                        </td>
+                    </tr>
+                    }
+                    @foreach (var item in Model.Stocks.Where(n => n.Amount != 0).ToList())
+                    {
+                    <tr>
+                        <td>
+                            <span>-</span>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SupplierName)
+                        </td>
+                        <td>
+                            <span class="label label-warning">Stok</span>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Unit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+
+            let entry = $("#entry").text();
+            let exit = $("#exit").text();
+            let stock = $("#stock").text();
+
+            $('#sparkline3').sparkline([parseFloat(exit) / parseFloat(entry) * 100, parseFloat(stock) / parseFloat(entry) * 100], {
+                type: 'pie',
+                width: '165',
+                height: '165',
+                sliceColors: ['#f05050', '#ffbd4a']
+            });
+        });
+    </script>
+}

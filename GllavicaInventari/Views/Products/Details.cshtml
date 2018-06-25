@@ -1,0 +1,43 @@
+﻿@model GllavicaInventari.Models.Product
+
+@{
+    ViewData["Title"] = "Detajet e produktit";
+}
+
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek produktet
+</a>
+<h2>Detajet e produktit: <span class="text-success">@Model.Title</span> </h2>
+
+<div class="visible-lg" style="height: 25px;"></div>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="card-box">
+            <div class="visible-lg" style="height: 10px;"></div>
+
+            <div class="text-center">
+                <table class="table">
+
+                    <tbody>
+                        <tr>
+                            <td><b>Emri</b></td>
+                            <td>@Model.Title</td>
+                        </tr>
+                        <tr>
+                            <td><b>Përshkrimi</b></td>
+                            <td>@Model.Description</td>
+                        </tr>
+                        <tr>
+                            <td><b>Njësia</b></td>
+                            <td>@Model.Unit</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="visible-lg" style="height: 10px;"></div>
+        </div>
+
+    </div> <!-- end col -->
+</div>

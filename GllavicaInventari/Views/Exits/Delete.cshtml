@@ -1,0 +1,63 @@
+﻿@model GllavicaInventari.Models.Exit
+
+@{
+    ViewData["Title"] = "Fshirja e një dalje";
+}
+
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek daljet
+</a>
+<h2>Fshirja e daljes mme nurmer serie : <span class="text-danger">@Model.SerialNumber</span> </h2>
+
+<div class="visible-lg" style="height: 25px;"></div>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="card-box">
+            <h2 class="text-center">Detajet e daljes</h2>
+            <div class="visible-lg" style="height: 10px;"></div>
+
+            <div class="text-center">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><b>Nr. i serisë</b></td>
+                            <td>@Model.SerialNumber</td>
+                        </tr>
+                        <tr>
+                            <td><b>Produkti</b></td>
+                            <td>@Model.Product.Title</td>
+                        </tr>
+                        <tr>
+                            <td><b>Data e hyrjes</b></td>
+                            <td>@Model.DateExit.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                        <tr>
+                            <td><b>Sasia</b></td>
+                            <td>@Model.Amount</td>
+                        </tr>
+                        <tr>
+                            <td><b>Cmimi</b></td>
+                            <td>@Model.Price</td>
+                        </tr>
+                        <tr>
+                            <td><b>Vlera totale</b></td>
+                            <td>@Model.TotalValue</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <p class="text-center">
+                    <button asp-action="Index" class="confirm btn btn-lg btn-default" tabindex="1" style="display: inline-block;"> <i class="fa fa-arrow-left"></i> Kthehu </button>
+                    <button type="submit" class="cancel btn btn-lg btn-danger" tabindex="2" style="display: inline-block;"> <i class="fa fa-trash"></i> Konfirmo </button>
+                </p>
+            </form>
+            <div class="visible-lg" style="height: 10px;"></div>
+        </div>
+    </div>
+</div>

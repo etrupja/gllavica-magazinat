@@ -1,0 +1,125 @@
+﻿@model GllavicaInventari.Models.Transfer
+
+@{
+    ViewData["Title"] = "Transferte";
+}
+
+
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek transfertat
+</a>
+<h2>Krijo nje transferte te re</h2>
+
+<div class="visible-lg" style="height: 25px;"></div>
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2 col-8">
+        <div class="card-box">
+            <form role="form" asp-action="Create">
+                <div class="form-group row">
+                    <label class="col-4 col-form-label">Kodi transferimit</label>
+                    <div class="col-7">
+                        <input asp-for="TransferCode" class="form-control" placeholder="" />
+                        <span asp-validation-for="TransferCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="FromWareHouseId" class="col-4 col-form-label"> Nga magazina <span class="text-danger">*</span></label>
+                    <div class="col-8">
+                        <div class="form-group">
+                            <select asp-for="FromWareHouseId" required id="fromWareHouseId" class="form-control" asp-items="ViewBag.FromWareHouses">
+                                <option value="">Zgjidhni magazinen dalese</option>
+                            </select>
+                            <span asp-validation-for="FromWareHouseId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="ProductId" class="col-4 col-form-label">Emri Produktit <span class="text-danger">*</span></label>
+                    <div class="col-7">
+                        <div class="form-group">
+                            <select asp-for="ProductId" id="productId" required class="form-control" asp-items="ViewBag.Products">
+                                <option value="">Zgjidhni nje produkt</option>
+                            </select>
+                            <span asp-validation-for="ProductId" class="text-danger"></span>
+                            <label id="productState" class=""></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="Amount" class="col-4 col-form-label">Sasia <span class="text-danger">*</span></label>
+                    <div class="col-7">
+                        <input asp-for="Amount" type="number" id="amount" required class="form-control" placeholder="" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                        <label id="amountState" class=""></label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="ToWareHouseId" class="col-4 col-form-label"> Tek magazina <span class="text-danger">*</span></label>
+                    <div class="col-8">
+                        <div class="form-group">
+                            <select asp-for="ToWareHouseId" required id="toWareHouseId" class="form-control" asp-items="ViewBag.ToWareHouses">
+                                <option value="">Zgjidhni magazinen hyrese</option>
+                            </select>
+                            <span asp-validation-for="ToWareHouseId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-8 offset-2">
+                        <button type="submit" id="btnSubmit" class="btn btn-primary waves-effect waves-light btn pull-right"> Ruaj te dhënat </button>
+                        <button type="reset" class="btn btn-secondary waves-effect m-l-5 btn"> Anullo </button>
+                    </div>
+                </div>
+            </form>
+            <div class="visible-lg" style="height: 10px;"></div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        
+        $("#productId").change(function (e) {
+            e.preventDefault();
+            console.log("Produkti transferohet");
+
+            $.post("ConfirmTransfer", { productId: $('#productId').val(), fromWareHouseId: $('#fromWareHouseId').val() }, function (data) {
+                if (data > 0) {
+                    $('#amount').prop('disabled', false);
+                    $("#productState").html("<span class='text-success'>Gjendja aktuale ne magazinë eshte: " + data + " njësi.</span>");
+                } else {
+                    $('#amount').prop('disabled', true);
+                    $("#productState").html("<span class='text-danger'>Gjendja aktuale ne magazinë eshte: " + data + " njësi.</span>");
+
+                }
+            });
+
+        });
+
+        $("#amount").change(function (e) {
+            e.preventDefault();
+            
+            $.post("ConfirmAmount", { productId: $('#productId').val(), fromWareHouseId: $('#fromWareHouseId').val(), amount: $('#amount').val() },
+                function (data) {
+                    if (data >= 0) {
+                        $("#amountState")
+                            .html("<span class='text-success'> Dalja e " + $('#amount').val() + " njësive mund të kryhet me sukses! Ju do te mbeteni me " + data + " njësi.</span>");
+                        $('#btnSubmit').prop('disabled', false);
+                        $('#toWareHouseId').prop('disabled', false);
+                    } else {
+                        $("#amountState")
+                            .html("<span class='text-danger'>Gjendja aktuale ne magazinë eshte me pak se " + $('#amount').val() + " njesi!</span>");
+                        $('#btnSubmit').prop('disabled', true);
+                        $('#toWareHouseId').prop('disabled', true);
+                    }
+                });
+        })
+
+        
+    </script>
+}

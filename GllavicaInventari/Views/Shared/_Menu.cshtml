@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="left side-menu">
+        <div class="sidebar-inner slimscrollleft">
+            <!--- Divider -->
+            <div id="sidebar-menu">
+                <ul>
+                    <li><a href="/Stock" class="waves-effect"><i class="ti-pie-chart"></i> <span> Raporte </span></a></li>
+                </ul>
+                <div class="clearfix"></div>
+                <ul>
+                    <li><a href="/Entries" class="waves-effect"><i class="ti-control-forward"></i> <span> Hyrje </span></a></li>
+                </ul>
+                <div class="clearfix"></div>
+                <ul>
+                    <li><a href="/Exits" class="waves-effect"><i class="ti-share-alt"></i> <span> Dalje </span></a></li>
+                </ul>
+                <div class="clearfix"></div>
+                <ul>
+                    <li><a href="/Transfers" class="waves-effect"><i class="ti-exchange-vertical"></i> <span> Transfero </span></a></li>
+                </ul>
+                <div class="clearfix"></div>
+                <ul>
+                    <li><a href="/Products" class="waves-effect"><i class="ti-dropbox"></i> <span> Produktet </span></a></li>
+                </ul>
+                <div class="clearfix"></div>
+                <ul>
+                    <li><a href="/Suppliers" class="waves-effect"><i class="ti-shopping-cart-full"></i> <span> Furnitorët </span></a></li>
+                </ul>
+                <div class="clearfix"></div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <ul>
+                        <li><a href="/Warehouses" class="waves-effect"><i class="ti-location-pin"></i> <span> Magazinat </span></a></li>
+                    </ul>
+                }
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+}

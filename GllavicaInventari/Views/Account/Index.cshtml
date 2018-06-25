@@ -1,0 +1,73 @@
+﻿@model List<ApplicationUser>
+@{
+    ViewData["Title"] = "Lista e perdoruesve";
+}
+
+<a class="btn btn-success btn-rounded waves-effect waves-light pull-right" asp-action="Create">
+    <span class="btn-label"><i class="fa fa-plus"></i></span>
+    Shto perdorues
+</a>
+<h2>Te gjithe perdoruesit</h2>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card-box table-responsive">
+            <h4 class="m-t-0 header-title">Lista e perdoruesve</h4>
+            <p class="text-muted font-14 m-b-30">
+                Kjo eshte lista e te perdoruesve
+            </p>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Emri </th>
+                        <th>Mbiemri </th>
+                        <th>Emaili/Username </th>
+                        <th>Magazina,-t</th>
+                        <th>Veprime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.FirstName
+                            </td>
+                            <td>
+                                @item.LastName
+                            </td>
+                            <td>
+                                @item.Email
+                            </td>
+                            <td>
+                                @foreach (var warehouse in item.Warehouses.Where(n => n.IsActive))
+                                {
+                                    <span class="label label-success">@warehouse.Name</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (item.Email != "admin@gllavica.com")
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn btn-icon waves-effect waves-light btn-default">
+                                        <i class="fa fa-edit"></i> Ndrysho
+                                    </a>
+                                    @if (item.Warehouses.Where(n => n.IsActive).Count() == 0)
+                                    {
+                                        <a asp-action="Delete" asp-route-id="@item.Id"
+                                           class="btn btn-icon waves-effect waves-light btn-danger">
+                                            <i class="fa fa-trash"></i> Fshij
+                                        </a>
+                                    }
+                                }
+
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

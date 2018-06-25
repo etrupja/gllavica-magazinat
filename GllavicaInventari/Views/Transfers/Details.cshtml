@@ -1,0 +1,62 @@
+﻿@model GllavicaInventari.Models.Transfer
+
+@{
+    ViewData["Title"] = "Details";
+}
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek transfertat
+</a>
+<div class="visible-lg" style="height: 40px;"></div>
+
+<h2 class="text-center">Transferta nga magazina <span class="text-danger">@Model.FromWareHouse.Name</span> per tek magazina <span class="text-success">@Model.ToWareHouse.Name</span> </h2>
+
+<div class="visible-lg" style="height: 25px;"></div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="card-box">
+            <div class="visible-lg" style="height: 10px;"></div>
+
+            <div class="text-center">
+                <table class="table">
+
+                    <tbody>
+                        <tr>
+                            <td><b>Kodi transfertes</b></td>
+                            <td>@Model.TransferCode</td>
+                        </tr>
+                        <tr>
+                            <td><b>Produkti</b></td>
+                            <td>@Model.Product.Title</td>
+                        </tr>
+                        <tr>
+                            <td><b>Sasia</b></td>
+                            <td>@Model.Amount @Model.Product.Unit</td>
+                        </tr>
+                        <tr>
+                            <td><b>Cmimi/Njesi</b></td>
+                            <td>@Model.Price/@Model.Product.Unit</td>
+                        </tr>
+                        <tr>
+                            <td><b>Vlera totale</b></td>
+                            <td class="text-success"><b>@Model.TotalValue</b></td>
+                        </tr>
+                        <tr>
+                            <td><b>Data e transfertes</b></td>
+                            <td>@Model.DateTranfer</td>
+                        </tr>
+                        <tr>
+                            <td><b>Nga magazina</b></td>
+                            <td class="text-danger">@Model.FromWareHouse.Name</td>
+                        </tr>
+                        <tr>
+                            <td><b>Tek magazina </b></td>
+                            <td class="text-success">@Model.ToWareHouse.Name</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="visible-lg" style="height: 10px;"></div>
+        </div>
+    </div>
+</div>

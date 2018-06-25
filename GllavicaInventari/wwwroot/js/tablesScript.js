@@ -1,0 +1,269 @@
+﻿$(document).ready(function () {
+
+    $('#ProductsTable').DataTable({
+        dom: 'lBfrtip',
+        buttons: [
+            { extend: 'copy', text: '<i class="fa fa-copy"></i> KOPJO', className: 'copyButton btn-success' },
+            {
+                extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
+                exportOptions: {
+                    columns: [0, 1, 2, 3],
+                },
+                customize: function (win) {
+                    $(win.document.body).find('table').addClass('display').css('font-size', '16px');
+                    $(win.document.body).find('table').css('width', '100%');
+                    $(win.document.body).find('tr:nth-child(odd) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('tr:nth-child(even) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('h1').css('text-align', 'center');
+                },
+                printOptions: {
+                    columns: [0, 1, 2, 3]
+                }
+            },
+            {
+                extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
+                exportOptions: {
+                    columns: [0, 1, 2, 3]
+                }
+            }
+        ]
+    });
+
+    $("#SuppliersTable").dataTable({
+        dom: 'lBfrtip',
+        buttons: [
+            { extend: 'copy', text: '<i class="fa fa-copy"></i> KOPJO', className: 'copyButton btn-success' },
+            {
+                extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                },
+                customize: function (win) {
+                    $(win.document.body).find('table').addClass('display').css('font-size', '16px');
+                    $(win.document.body).find('table').css('width', '100%');
+                    $(win.document.body).find('tr:nth-child(odd) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('tr:nth-child(even) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('h1').css('text-align', 'center');
+                },
+                printOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                }
+            },
+            {
+                extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                }
+            }
+        ]
+    });
+
+    $("#WarehousesTable").dataTable({
+        dom: 'lBfrtip',
+        buttons: [
+            { extend: 'copy', text: '<i class="fa fa-copy"></i> KOPJO', className: 'copyButton btn-success' },
+            {
+                extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
+                exportOptions: {
+                    columns: [0, 1, 2]
+                },
+                customize: function (win) {
+                    $(win.document.body).find('table').addClass('display').css('font-size', '16px');
+                    $(win.document.body).find('table').css('width', '100%');
+                    $(win.document.body).find('tr:nth-child(odd) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('tr:nth-child(even) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('h1').css('text-align', 'center');
+                },
+                printOptions: {
+                    columns: [0, 1, 2]
+                }
+            },
+            {
+                extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
+                exportOptions: {
+                    columns: [0, 1, 2]
+                }
+            }
+        ]
+    });
+
+    var oTable = $("#EntriesTable").dataTable({
+        dom: 'lBfrtip',
+        buttons: [
+            { extend: 'copy', text: '<i class="fa fa-copy"></i> KOPJO', className: 'copyButton btn-success' },
+            {
+                extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                },
+                customize: function (win) {
+                    $(win.document.body).find('table').addClass('display').css('font-size', '16px');
+                    $(win.document.body).find('table').css('width', '100%');
+                    $(win.document.body).find('tr:nth-child(odd) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('tr:nth-child(even) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('h1').css('text-align', 'center');
+                },
+                printOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                }
+            },
+            {
+                extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                }
+            }
+        ]
+    });
+
+    $("#ExitsTable").dataTable({
+        dom: 'lBfrtip',
+        buttons: [
+            { extend: 'copy', text: '<i class="fa fa-copy"></i> KOPJO', className: 'copyButton btn-success' },
+            {
+                extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                },
+                customize: function (win) {
+                    $(win.document.body).find('table').addClass('display').css('font-size', '16px');
+                    $(win.document.body).find('table').css('width', '100%');
+                    $(win.document.body).find('tr:nth-child(odd) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('tr:nth-child(even) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('h1').css('text-align', 'center');
+                },
+                printOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                }
+            },
+            {
+                extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                }
+            }
+        ]
+    });
+
+    $("#DetailsTable").dataTable({
+        dom: 'lBfrtip',
+        buttons: [
+            { extend: 'copy', text: '<i class="fa fa-copy"></i> KOPJO', className: 'copyButton btn-success' },
+            {
+                extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6]
+                },
+                customize: function (win) {
+                    $(win.document.body).find('table').addClass('display').css('font-size', '16px');
+                    $(win.document.body).find('table').css('width', '100%');
+                    $(win.document.body).find('tr:nth-child(odd) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('tr:nth-child(even) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('h1').css('text-align', 'center');
+                },
+                printOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6]
+                }
+            },
+            {
+                extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6]
+                }
+            }
+        ]
+    });
+
+    $("#TransfersTable").dataTable({
+        dom: 'lBfrtip',
+        buttons: [
+            { extend: 'copy', text: '<i class="fa fa-copy"></i> KOPJO', className: 'copyButton btn-success' },
+            {
+                extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6,7]
+                },
+                customize: function (win) {
+                    $(win.document.body).find('table').addClass('display').css('font-size', '16px');
+                    $(win.document.body).find('table').css('width', '100%');
+                    $(win.document.body).find('tr:nth-child(odd) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('tr:nth-child(even) td').each(function (index) {
+                        $(this).css('text-align', 'center');
+                    });
+                    $(win.document.body).find('h1').css('text-align', 'center');
+                },
+                printOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6,7]
+                }
+            },
+            {
+                extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6,7]
+                }
+            }
+        ]
+    });
+    
+
+    $("#datepicker_from").datepicker({ format: 'mm-dd-yyyy' }).on("changeDate", function () {
+        let id = $("#wareHouseDetailsId").val();
+        let dateStart = $(this).val();
+        let dateEnd = $("#datepicker_to").val()
+        window.location.href = "/Stock/Details/" + id + "/" + dateStart + "/" + dateEnd;
+    });
+
+    $("#datepicker_to").datepicker({ format: 'mm-dd-yyyy' }).on("changeDate", function () {
+        let id = $("#wareHouseDetailsId").val();
+        let dateEnd = $(this).val();
+        let dateStart = $("#datepicker_from").val();
+        window.location.href = "/Stock/Details/" + id + "/" + dateStart + "/" + dateEnd;
+    });
+
+
+
+    $("#entryId").bootstrapValidator();
+    $("#exitId").bootstrapValidator();
+    $(".select-product").select();
+    $("#supplier-select").select();
+
+    /*$("#exitId").bootstrapValidator();
+    $("#truckId").bootstrapValidator();
+    $("#SaveChangesProductForm").bootstrapValidator();
+    $('[data-toggle="tooltip"]').tooltip();
+    $(".document-date").datetimepicker({
+        format: "DD/MM/YYYY",
+        defaultDate: new Date(),
+    });
+    $('.csutom_select').selectpicker();
+    $('#client-selectpicker').selectpicker();
+    $('.selectpicker').selectpicker();
+    $("#client-select").select2();
+    */
+})

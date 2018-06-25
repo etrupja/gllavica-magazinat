@@ -1,0 +1,71 @@
+﻿@model GllavicaInventari.Models.Transfer
+
+@{
+    ViewData["Title"] = "Fshirja e transfertes";
+}
+
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek transfertat
+</a>
+<h2>Fshirja e transfertes me kod: <span class="text-danger">@Model.TransferCode</span> </h2>
+
+<div class="visible-lg" style="height: 25px;"></div>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="card-box">
+            <h2 class="text-center">Detajet e hyrjes</h2>
+            <div class="visible-lg" style="height: 10px;"></div>
+
+            <div class="text-center">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><b>Kodi transfertes</b></td>
+                            <td>@Model.TransferCode</td>
+                        </tr>
+                        <tr>
+                            <td><b>Produkti</b></td>
+                            <td>@Model.Product.Title</td>
+                        </tr>
+                        <tr>
+                            <td><b>Sasia</b></td>
+                            <td>@Model.Amount @Model.Product.Unit</td>
+                        </tr>
+                        <tr>
+                            <td><b>Cmimi/Njesi</b></td>
+                            <td>@Model.Price/@Model.Product.Unit</td>
+                        </tr>
+                        <tr>
+                            <td><b>Vlera totale</b></td>
+                            <td class="text-success"><b>@Model.TotalValue</b></td>
+                        </tr>
+                        <tr>
+                            <td><b>Data e transfertes</b></td>
+                            <td>@Model.DateTranfer</td>
+                        </tr>
+                        <tr>
+                            <td><b>Nga magazina</b></td>
+                            <td class="text-danger">@Model.FromWareHouse.Name</td>
+                        </tr>
+                        <tr>
+                            <td><b>Tek magazina </b></td>
+                            <td class="text-success">@Model.ToWareHouse.Name</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <p class="text-center">
+                    <button asp-action="Index" class="confirm btn btn-lg btn-default" tabindex="1" style="display: inline-block;"> <i class="fa fa-arrow-left"></i> Kthehu </button>
+                    <button type="submit" class="cancel btn btn-lg btn-danger" tabindex="2" style="display: inline-block;"> <i class="fa fa-trash"></i> Konfirmo </button>
+                </p>
+            </form>
+            <div class="visible-lg" style="height: 10px;"></div>
+        </div>
+
+    </div> <!-- end col -->
+</div>

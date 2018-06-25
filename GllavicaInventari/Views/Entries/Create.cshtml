@@ -1,0 +1,245 @@
+﻿@*@model GllavicaInventari.Models.Entry*@
+@model EntryViewModel
+@{
+    ViewData["Title"] = "Krijo hyrje";
+}
+
+
+<div class="card-box table-responsive">
+    <br />
+    <div class="col-sm-12 " id="right-side" style="margin-top: 20px;">
+
+        @using (@Html.BeginForm("SaveEntry", "Entries", FormMethod.Post, new { @id = "entryId", @data_toggle = "validator" }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" value="1" id="products" name="nrproduct" />
+            <button type="button" onclick="printEntry()" class="btn btn-inverse waves-effect waves-light pull-right" style="margin-right: 40px"><i class="md-print" style="font-size:14px"></i> PRINTO</button>
+            <div class="panel" id="printPanelId">
+                <div class="panel-heading greenelement">
+                    <h4 class="panel-title" style="text-align: center; font-weight: 500;font-size:27px;"> <b>Fletë Hyrje</b></h4>
+                </div>
+                <div class="panel-body">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="col-sm-12 col-sm-12 col-lg-12" style="min-height: 250px;border-bottom: 1px solid #cfcfd6;">
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">Nr. i serisë</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-key" aria-hidden="true"></i>
+                                </div>
+                                <input type="text" required class="form-control" data-bv-notempty-message="Nr. i serise nuk mund të lihet bosh!" name="documentnumber" value="@Model.SerialNumber">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label">Numër fature</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calculator" aria-hidden="true"></i>
+                                </div>
+                                <input type="text" required class="form-control" data-bv-notempty-message="Numri faturës nuk mund të lihet bosh!" name="billnumber" value="@Model.BillNumber">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6" style="display:block">
+                            <label class="control-label">Furnitori</label>
+                            <i class="fa fa-plus-square" style="cursor:pointer" data-url="CreateSupplierShortForm" data-form="SaveSupplierForm" data-action="FURNITOR" onclick="CreateElement(this)"></i>
+                            <div class="input-group ">
+                                <span class="input-group-addon"><i class="fa fa-truck" aria-hidden="true"></i></span>
+                                <select class="form-control show-tick" id="supplier-select" name="supplierid" required title="Zgjidh furnitor..." data-bv-notempty-message="Furnitori nuk mund të lihet bosh!" data-style="btn-default" data-live-search="true">
+                                    @foreach (var item in Model.Suppliers)
+                                    {
+                                        <option value="@item.Id"> @item.Name </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="control-label"> Magazina</label>
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="ti-package" aria-hidden="true"></i></span>
+                                <select class="form-control" id="warehouse-select" name="warehouseid" required title="Zgjidh magazine..." data-bv-notempty-message="Magazina nuk mund të lihet bosh!" data-style="btn-default" data-live-search="true">
+                                    @foreach (var item in Model.Warehouses)
+                                    {
+                                        <option value="@item.Id"> @item.Name </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <br />
+                    <div class="body-product">
+                        <br />
+                        <div class="row col-sm-12 productpack">
+                            <div class="form-group col-sm-5" style="padding-right: 0;">
+                                <label class="control-label productlabel col-sm-12">
+                                    Artikulli
+                                    <i class="fa fa-plus-square" style="cursor:pointer" data-url="CreateProductShortForm" data-form="SaveProductForm" data-action="PRODUKT" onclick="CreateElement(this)"></i>
+
+                                </label>
+                                <div>
+                                    <select name="Product[]" required="required" class="form-control select-product show-tick" title="Zgjidh artikull..." data-live-search="true" data-bv-notempty-message="Artikulli nuk mund të lihet bosh!">
+                                        <option value="0" selected disabled hidden>Zgjidh artikull</option>
+
+                                        @foreach (var product in Model.Products)
+                                        {
+                                            <option value="@product.Id"> @product.Title </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-2" style="padding-right: 0;">
+                                <label class="control-label col-sm-12 quantitylabel"> Sasia </label>
+                                <div>
+                                    <input type="number" step="any" required="required" name="Quantity[]" data-bv-notempty-message="Sasia nuk mund të lihet bosh!" id="quantityId" class="form-control text-box single-line" onkeyup="calculateValue(this)" onchange="calculateValue(this)" min="0" />
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-2" style="padding-right: 0;">
+                                <label class="control-label col-sm-12 pricelabel"> Cmimi </label>
+                                <div>
+                                    <input type="number" name="Price[]" required="required" step="any" id="priceId" class="form-control text-box single-line" min="0" data-bv-notempty-message="Cmimi nuk mund të lihet bosh!" onkeyup="calculateValue(this)" onchange="calculateValue(this)" />
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-2" style="padding-right: 0;">
+                                <label> Vlera </label>
+                                <input type="text" readonly name="SubtotalValue[]" id="valueid" class="form-control text-box single-line" min="0" style="background: white;" />
+                            </div>
+                            <button type="button" class="btn pull-right remove  btn-responsive button-alignment btn-danger active" onclick="removeProduct(this)" style="margin-bottom:7px;    margin-top: 25px;" data-toggle="button" aria-pressed="true"><i class="fa fa-minus" aria-hidden="true"></i> </button>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-3 pull-right" style="margin-top: 10px;">
+                        <button type="button" class="btn pull-right btn-success waves-effect waves-light" onclick="addProduct(this)" style="margin-bottom:7px;" data-toggle="button" aria-pressed="true"><i class="fa fa-plus" aria-hidden="true"></i> Shto artikull</button>
+                    </div>
+                    <div class="clearfix"></div>
+                    <br />
+                    <div class="col-sm-12" style="min-height: 70px;  border-bottom: 1px solid #cfcfd6;">
+                        <div class="col-sm-3 pull-right">
+                            <label><strong> Totali pa TVSH</strong></label>
+                            <input type="text" readonly class="form-control" name="Model.Header.total" id="totalId">
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="col-sm-12" style="margin-top:20px;">
+                            <button onclick="submitentry()" type="button" class="btn btn-inverse waves-effect waves-light pull-right" style="margin-bottom:7px;" data-toggle="button"><i class="md-save"></i> Regjistro Hyrjen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+        function printEntry() {
+            $('#printPanelId').printThis({
+                importCSS: true,
+                importStyle: true,
+                copyTagClasses: true
+            });
+        }
+
+
+        function submitentry() {
+            $('#entryId').data('bootstrapValidator').destroy();
+            //validator.destroy();
+            $("#entryId").bootstrapValidator();
+            //var validator =
+            $('#entryId').data('bootstrapValidator').validate();
+            //validator.validate();
+            console.log($('#entryId').data('bootstrapValidator').isValid());
+            if ($('#entryId').data('bootstrapValidator').isValid()) {
+                document.getElementById("entryId").submit()
+            }
+        }
+
+        function addProduct() {
+            //var validator = $('#entryId').data('bootstrapValidator');
+            $('#entryId').data('bootstrapValidator').destroy();
+            $("#entryId").bootstrapValidator();
+            //var validator = $('#entryId').data('bootstrapValidator');
+            $('#entryId').data('bootstrapValidator').validate();
+            if ($('#entryId').data('bootstrapValidator').isValid()) {
+                $('#entryId').data('bootstrapValidator').destroy();
+                $("#entryId").bootstrapValidator();
+                //var packing = $('.productpack').last();
+                $('.productpack').last().find('.select-product').select("destroy").end();
+
+                //var clone = packing.clone();
+                //var lastprod = $(".productpack").last();
+                $('.productpack').last().clone().find('input').val('');
+                $('.productpack').last().clone().find('.select-product').select();
+                $('.productpack').last().clone().find('.select-product').last().next().next().remove();
+
+                $('.productpack').last().clone().insertAfter($(".productpack").last());
+                var nr = $("#products").val();
+                nr++;
+                $("#products").val(nr);
+            }
+        }
+
+
+        function removeProduct(a) {
+            if ($("#products").val() > 1) {
+                var allproducts = $(a).parent().parent().parent();
+                $(a).parent().remove();
+                var nr = $("#products").val();
+                nr--;
+                $("#products").val(nr);
+                var subtotal = 0;
+                var total = 0;
+
+
+                allproducts.find(".productpack").each(function () {
+                    var quantity = parseFloat($(this).find("#quantityId").val());
+                    var price = parseFloat($(this).find("#priceId").val());
+
+                    subtotal = quantity * price;
+
+                    if (subtotal) 
+                        total += subtotal;
+                });
+
+                $("#totalId").val(total);
+            }
+            else {
+                $.Notification.notify('warning', 'top center', 'Kujdes!', 'Duhet minimalisht një artikull për të proceduar me hyrjen!');
+            }
+
+        }
+
+        function calculateValue(a) {
+            var b = $(a).parent().parent().parent();
+            var q = parseFloat(b.find("#quantityId").val());
+            var p = parseFloat(b.find("#priceId").val());
+            
+            if (p && q) {
+                var d = p * q;
+                b.find("#valueid").val((p * q).toFixed(2));
+            }
+
+            var b = $(a).parent().parent().parent();
+            var allproducts = b.parent();
+            var subtotal = 0;
+            var total = 0;
+
+            allproducts.find(".productpack").each(function () {
+                var quantity = parseFloat($(this).find("#quantityId").val());
+                var price = parseFloat($(this).find("#priceId").val());
+
+                subtotal = quantity * price;
+              
+                if (subtotal)
+                    total += subtotal;
+            });
+
+            console.log("total - ", total);
+            $("#totalId").val(total);
+        }
+    </script>
+}

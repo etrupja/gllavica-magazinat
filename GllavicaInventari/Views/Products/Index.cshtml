@@ -1,0 +1,82 @@
+﻿@model IEnumerable<GllavicaInventari.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<a class="btn btn-success btn-rounded waves-effect waves-light pull-right" asp-action="Create">
+    <span class="btn-label"><i class="fa fa-plus"></i></span>
+    Shto produkt
+</a>
+<h2>Te gjithe produktet</h2>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card-box table-responsive">
+            <h4 class="m-t-0 header-title">Lista e produkteve</h4>
+            <p class="text-muted font-14 m-b-30">
+                Kjo eshte lista e te gjithe produkteve qe ju keni.
+            </p>
+
+            @*<a class="btn btn-default buttons-print printButton btn-inverse" tabindex="0" aria-controls="ProductsTable"><span><i class="fa fa-print"></i> PRINTO</span></a>*@
+
+            <table id="ProductsTable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Emri </th>
+                        <th>Pershkrimi</th>
+                        <th>Njësia</th>
+                        <th>Ka TVSH?</th>
+                        <th class="text-center">Veprime</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Unit)
+                        </td>
+                        <td>
+                            @if(item.HasTVSH == true)
+                            {
+                                <span>PO</span>
+                            }
+                            else
+                            {
+                                <span>JO</span>
+
+                            }
+                            @*@Html.DisplayFor(modelItem => item.HasTVSH)*@
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Details" asp-route-id="@item.Id"
+                               class="btn btn-icon waves-effect waves-light btn-success">
+                                <i class="fa fa-eye"></i> Detajet
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@item.Id"
+                               class="btn btn-icon waves-effect waves-light btn-default">
+                                <i class="fa fa-edit"></i> Ndrysho
+                            </a>
+                            @if (item.Entries.Count == 0)
+                            {
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                   class="btn btn-icon waves-effect waves-light btn-danger">
+                                    <i class="fa fa-trash"></i> Fshij
+                                </a>
+                            }
+
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

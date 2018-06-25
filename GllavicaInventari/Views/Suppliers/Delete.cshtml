@@ -1,0 +1,58 @@
+﻿@model GllavicaInventari.Models.Supplier
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek furnitorët
+</a>
+<h2>Fshirja e furnitorit: <span class="text-danger">@Model.Name</span> </h2>
+
+<div class="visible-lg" style="height: 25px;"></div>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="card-box">
+            <h2 class="text-center">Detajet e furnitorit</h2>
+            <div class="visible-lg" style="height: 10px;"></div>
+
+            <div class="text-center">
+                <table class="table">
+
+                    <tbody>
+                        <tr>
+                            <td><b>Emri i furnitorit</b></td>
+                            <td>@Model.Name</td>
+                        </tr>
+                        <tr>
+                        <tr>
+                            <td><b> Kontakti </b></td>
+                            <td>@Model.Contact</td>
+                        </tr>
+                        <tr>
+                            <td><b>Adresa </b></td>
+                            <td>@Model.Address</td>
+                        </tr>
+                        <tr>
+                            <td><b>Përshkrimi </b></td>
+                            <td>@Model.Description</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <p class="text-center">
+                    <button asp-action="Index" class="confirm btn btn-lg btn-default" tabindex="1" style="display: inline-block;"> <i class="fa fa-arrow-left"></i> Kthehu </button>
+                    <button type="submit" class="cancel btn btn-lg btn-danger" tabindex="2" style="display: inline-block;"> <i class="fa fa-trash"></i> Konfirmo </button>
+                </p>
+            </form>
+            <div class="visible-lg" style="height: 10px;"></div>
+        </div>
+
+    </div> <!-- end col -->
+</div>

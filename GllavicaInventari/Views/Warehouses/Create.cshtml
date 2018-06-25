@@ -1,0 +1,64 @@
+﻿@model GllavicaInventari.Models.Warehouse
+
+@{
+    ViewData["Title"] = "Krijo magazinë";
+}
+
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek magazinat
+</a>
+<h2>Krijo magazinë te re</h2>
+
+<div class="visible-lg" style="height: 25px;"></div>
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2 col-8">
+        <div class="card-box">
+            <form role="form" asp-action="Create">
+                <div class="form-group row">
+                    <label class="col-4 col-form-label">Emri i magazinës<span class="text-danger">*</span></label>
+                    <div class="col-7">
+                        <input asp-for="Name" required class="form-control" placeholder="Psh. Magazina Corovode etj." />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="pershkrimi" class="col-4 col-form-label"> Pershkrimi magazinës </label>
+                    <div class="col-8">
+                        <input asp-for="Description" class="form-control" placeholder="Nje pershkrimi i shkurter per magazinen (opsional)" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="hori-pass1" class="col-4 col-form-label"> Adresa magazinës <span class="text-danger">*</span></label>
+                    <div class="col-7">
+                        <input asp-for="Address" required class="form-control" placeholder="Kodi produktit...(opsional)" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="SupplierId" class="col-4 col-form-label">Magazinieri <span class="text-danger">*</span></label>
+                    <div class="col-7">
+                        <div class="form-group">
+                            <select asp-for="ApplicationUserId" required class="form-control" asp-items="ViewBag.Users">
+                                <option value="">Zgjidhni nje magazinier</option>
+                            </select>
+                            <span asp-validation-for="ApplicationUserId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-8 offset-2">
+                        <button type="submit" class="btn btn-primary waves-effect waves-light btn pull-right"> Ruaj te dhënat </button>
+                        <button type="reset" class="btn btn-secondary waves-effect m-l-5 btn"> Anullo </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="visible-lg" style="height: 10px;"></div>
+        </div>
+    </div> 
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

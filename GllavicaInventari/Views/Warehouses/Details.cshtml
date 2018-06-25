@@ -1,0 +1,46 @@
+﻿@model GllavicaInventari.Models.Warehouse
+
+@{
+    ViewData["Title"] = "Detajet e magazinës";
+}
+
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek magazinat
+</a>
+<h2>Detajet e magazinës: <span class="text-success">@Model.Name</span> </h2>
+
+<div class="visible-lg" style="height: 25px;"></div>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="card-box">
+            <div class="visible-lg" style="height: 10px;"></div>
+
+            <div class="text-center">
+                <table class="table">
+
+                    <tbody>
+                        <tr>
+                            <td><b>Emri i magazinës</b></td>
+                            <td>@Model.Name</td>
+                        </tr>
+                        <tr>
+                            <td><b>Përshkrimi</b></td>
+                            <td>@Model.Description</td>
+                        </tr>
+                        <tr>
+                            <td><b>Adresa</b></td>
+                            <td>@Model.Address</td>
+                        </tr>
+                        <tr>
+                            <td><b>Magazinieri</b></td>
+                            <td>@Model.ApplicationUser.FullName</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="visible-lg" style="height: 10px;"></div>
+        </div>
+    </div>
+</div>

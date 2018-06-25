@@ -1,0 +1,79 @@
+﻿@model GllavicaInventari.Models.Entry
+
+@{
+    ViewData["Title"] = "Ndrysho te dhenat e hyrjes";
+}
+
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek Hyrjet
+</a>
+<h2>Ndrysho te dhenat e hyrjes</h2>
+
+<div class="visible-lg" style="height: 25px;"></div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card-box">
+            <form role="form" asp-action="Edit">
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group row">
+                    <label class="col-md-4 col-form-label" style="font-size:large">Nr. i Serisë: <span class="text-success"> @Model.SerialNumber</span></label>
+                    <label class="col-md-4 col-form-label" style="font-size:large">Nr. i Faturës: <span class="text-success"> @Model.BillNumber</span></label>
+                    <label class="col-md-4 col-form-label" style="font-size:large">Data e Hyrjes: <span class="text-success"> @Model.DateEntry.ToString("dd/MM/yyyy")</span></label>
+                </div>
+                <br />
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <label for="ProductId" class="col-4 col-form-label">Emri Produktit <span class="text-danger">*</span></label>
+                        <div class="form-group">
+                            <select asp-for="ProductId" required class="form-control" asp-items="ViewBag.Products">
+                                <option value="">Zgjidhni nje produkt</option>
+                            </select>
+                            <span asp-validation-for="ProductId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="Amount" class="col-4 col-form-label">Sasia <span class="text-danger">*</span></label>
+                        <input asp-for="Amount" type="text" required class="form-control" id="amount" placeholder="" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="Price" class="col-4 col-form-label">Cmimi <span class="text-danger">*</span></label>
+                        <input asp-for="Price" type="text" required class="form-control" id="price" placeholder="" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-4 pull-right">
+                        <label for="TotalValue" class="col-4 col-form-label">Vlera pa TVSH </label>
+                        <input asp-for="TotalValue" class="form-control" disabled="disabled" id="totalPrice" placeholder="" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-8 offset-2">
+                        <button type="submit" class="btn btn-primary waves-effect waves-light btn pull-right"> Ruaj ndryshimet </button>
+                    </div>
+                </div>
+            </form>
+            <div class="visible-lg" style="height: 10px;"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Content/assets/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#price, #amount").change(function () {
+                var price = parseFloat($("#price").val());
+                var amount = parseFloat($("#amount").val());
+
+                $("#totalPrice").val((price * amount).toFixed(2));
+            })
+        })
+    </script>
+}

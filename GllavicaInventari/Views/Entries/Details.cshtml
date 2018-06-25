@@ -1,0 +1,63 @@
+﻿@model GllavicaInventari.Models.Entry
+
+@{
+    ViewData["Title"] = "Detajet e hyrjes";
+}
+
+<a class="btn btn-default btn-rounded waves-effect waves-light pull-right" asp-action="Index">
+    <span class="btn-label"><i class="fa fa-backward"></i></span>
+    Kthehu tek hyrjes
+</a>
+<h2>Numri i serise: <span class="text-success">@Model.SerialNumber</span> </h2>
+
+<div class="visible-lg" style="height: 25px;"></div>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="card-box">
+            <div class="visible-lg" style="height: 10px;"></div>
+
+            <div class="text-center">
+                <table class="table">
+
+                    <tbody>
+                        <tr>
+                            <td><b>Nr. i Serise</b></td>
+                            <td>@Model.SerialNumber</td>
+                        </tr>
+                        <tr>
+                            <td><b>Nr. i Fatures</b></td>
+                            <td>@Model.BillNumber</td>
+                        </tr>
+                        <tr>
+                            <td><b>Produkti</b></td>
+                            <td>@Model.Product.Title</td>
+                        </tr>
+                        <tr>
+                            <td><b>Data e hyrjes</b></td>
+                            <td>@Model.DateEntry.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                        <tr>
+                            <td><b>Sasia</b></td>
+                            <td>@Model.Amount</td>
+                        </tr>
+                        <tr>
+                            <td><b>Cmimi</b></td>
+                            <td>@Model.Price</td>
+                        </tr>
+                        <tr>
+                            <td><b>Vlera totale</b></td>
+                            <td>@Model.TotalValue</td>
+                        </tr>
+                        <tr>
+                            <td><b>Emri Furnitorit</b></td>
+                            <td>@Model.Supplier.Name</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="visible-lg" style="height: 10px;"></div>
+        </div>
+
+    </div> <!-- end col -->
+</div>
