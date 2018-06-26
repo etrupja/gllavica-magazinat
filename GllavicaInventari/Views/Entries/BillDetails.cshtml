@@ -20,13 +20,19 @@
                                         <th>Nr. i Serisë</th>
                                         <th>Nr. i Faturës</th>
                                         <th>Data e Hyrjes</th>
-                                        <th>Furnitori</th>
+                                        @if (!Model.FirstOrDefault().IsTransfer)
+                                        {
+                                            <th>Furnitori</th>
+                                        }
                                     </tr>
                                     <tr>
-                                        <td>@Model.First().SerialNumber</td>
-                                        <td>@Model.First().BillNumber</td>
-                                        <td>@Model.First().DateEntry.ToString("dd/MM/yyyy")</td>
-                                        <td>@Model.First().Supplier.Name</td>
+                                        <td>@Model.FirstOrDefault().SerialNumber</td>
+                                        <td>@Model.FirstOrDefault().BillNumber</td>
+                                        <td>@Model.FirstOrDefault().DateEntry.ToString("dd/MM/yyyy")</td>
+                                        @if (!Model.FirstOrDefault().IsTransfer)
+                                        {
+                                            <td>@Model.FirstOrDefault().Supplier.Name</td>
+                                        }
                                     </tr>
                                 </tbody>
                             </table>

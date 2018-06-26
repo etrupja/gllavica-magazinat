@@ -18,9 +18,10 @@
         <div class="card-box">
             <form role="form" asp-action="Edit">
                 <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="WareHouseId" />
                 <div class="form-group row">
-                    <label class="col-md-4 col-form-label" style="font-size:large">Nr. i Serisë: <span class="text-success"> @Model.SerialNumber</span></label>
-                    <label class="col-md-4 col-form-label" style="font-size:large">Data e daljes: <span class="text-success"> @Model.DateExit.ToString("dd/MM/yyyy")</span></label>
+                    <label class="col-md-6 col-form-label" style="font-size:large">Nr. i Serisë: <span class="text-success"> @Model.SerialNumber</span></label>
+                    <label class="col-md-6 col-form-label" style="font-size:large">Data e daljes: <span class="text-success"> @Model.DateExit.ToString("dd/MM/yyyy")</span></label>
                 </div>
                 <br />
                 <div class="form-group row">
@@ -65,61 +66,44 @@
 </div>
 
 @section Scripts {
-    <script src="~/Content/assets/js/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#price, #amount").change(function () {
-                var price = parseFloat($("#price").val());
-                var amount = parseFloat($("#amount").val());
+<script src="~/Content/assets/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#price, #amount").change(function (e) {
+            e.preventDefault();
+            var price = parseFloat($("#price").val());
+            var amount = parseFloat($("#amount").val());
+            $("#totalPrice").val((price * amount).toFixed(2));
+        });
 
-                $("#totalPrice").val((price * amount).toFixed(2));
-            });
-        })
-    </script>
-    <script>
-
-        $("#productId").change(function (e) {
+        //ConfirmAmount
+        $("#ProductId, #amount").change(function (e) {
             e.preventDefault();
 
-            var data = {
-                productId: $('#productId').val(),
-                warehouseId: $('#warehouseId').val()
-            };
+            var amount = parseFloat($("#amount").val());
+            var productId = parseInt($('#ProductId').val());
+            var warehouseId = parseInt($('#WareHouseId').val());
 
-            $.post("ConfirmExit", { productId: $('#productId').val(), warehouseId: $('#warehouseId').val() }, function (data) {
-                if (data > 0) {
-                    $('#amount').prop('disabled', false);
-                    $("#productState").html("<span class='text-success'>Gjendja aktuale ne magazinë eshte: " + data + " njësi.</span>");
-                } else {
-                    $('#amount').prop('disabled', true);
-                    $("#productState").html("<span class='text-danger'>Gjendja aktuale ne magazinë eshte: " + data + " njësi.</span>");
+            console.log("Amount - ", amount);
+            console.log("Product Id - ", productId);
+            console.log("Warehouse Id - ", warehouseId);
 
-                }
-            });
-
-        })
-
-        $("#amount").change(function (e) {
-            e.preventDefault();
-
-            var data = {
-                productId: $('#productId').val(),
-                warehouseId: $('#warehouseId').val(),
+            $.post("/Exits/ConfirmExit", {
+                productId: $('#ProductId').val(),
+                warehouseId: $('#WareHouseId').val(),
                 amount: $('#amount').val()
-            };
-
-            $.post("ConfirmAmount", { productId: $('#productId').val(), warehouseId: $('#warehouseId').val(), amount: $('#amount').val() },
+            },
                 function (data) {
-                    if (data >= 0) {
-                        $("#amountState")
-                            .html("<span class='text-success'> Dalja e " + $('#amount').val() + " njësive mund të kryhet me sukses! Ju do te mbeteni me " + data + " njësi.</span>");
-                        $('#btnSubmit').prop('disabled', false);
-                    } else {
-                        $("#amountState")
-                            .html("<span class='text-danger'>Gjendja aktuale ne magazinë eshte me pak se " + $('#amount').val() + " njesi!</span>");
-                        $('#btnSubmit').prop('disabled', true);
+                    console.log("data - ", data);
+                    if (data < 0) {
+                        $.Notification.notify('error', 'top center', 'Kujdes!', "Ju keni ne stok " + data + " njesi!");
+
+                        //$.Notification.notify('success', 'top center', 'Aprovuar!', "Ju do te mbeteni me " + data + "");
+                        //} else {
                     }
                 });
         })
-    </script>
+
+    })
+</script>
 }

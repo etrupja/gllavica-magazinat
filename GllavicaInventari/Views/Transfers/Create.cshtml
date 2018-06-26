@@ -215,7 +215,7 @@
             console.log("Warehouse Id = " + fromWareHouseId + ", ProductId = " + productId + ", Amount = " + amount)
 
             if (amount && fromWareHouseId && productId) {
-                $.post("ConfirmExit", {
+                $.post("ConfirmTransfer", {
                     amount: $('#quantityId').last().val(),
                     productId: $('.productpack').last().find('.select-product').val(),
                     fromWareHouseId: $('#from-warehouse-select').val()

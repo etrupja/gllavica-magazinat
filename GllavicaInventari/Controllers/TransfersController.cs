@@ -207,6 +207,7 @@ namespace GllavicaInventari.Controllers
                         Amount = amount,
                         Price = price,
                         TotalValue = Math.Round(amount*price, 2),
+                        TotalValueWithTVSH = Math.Round(amount * price + amount * price * .20, 2),
                         DateTranfer = dateNow,
                         LoggedInUserId = loggedInUserId,
                         LoggedInUserFullName = loggedInUserFullName,
@@ -220,79 +221,7 @@ namespace GllavicaInventari.Controllers
             }
             return RedirectToAction("Index");
         }
-
-        // POST: Transfers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SerialNumber,BillNumber,Amount,DateTranfer,FromWareHouseId,ToWareHouseId,ProductId")] Transfer transfer)
-        {
-            if (ModelState.IsValid)
-            {
-                //find the product being transfered
-                var product = _context.Entries
-                    .Where(n => n.ProductId == transfer.ProductId & n.WareHouseId == transfer.FromWareHouseId & n.IsActive)
-                    .OrderByDescending(n => n.DateEntry)
-                    .Select(n => new { n.Price, n.SupplierId }).FirstOrDefault();
-
-                var loggedInUser = GetSignedInUser();
-                DateTime transferTime = DateTime.UtcNow.AddHours(2);
-
-                transfer.Price = product.Price;
-                transfer.TotalValue = product.Price * transfer.Amount;
-                transfer.DateTranfer = transferTime;
-                transfer.LoggedInUserId = loggedInUser.Id;
-                transfer.LoggedInUserFullName = loggedInUser.FullName;
-                transfer.IsActive = true;
-
-                _context.Add(transfer);
-                await _context.SaveChangesAsync();
-
-                //Create an Exit and an Entry
-                Entry newEntry = new Entry()
-                {
-                    SerialNumber = transfer.SerialNumber,
-                    BillNumber = transfer.BillNumber,
-                    Amount = transfer.Amount,
-                    Price = product.Price,
-                    TotalValue = transfer.Amount * product.Price,
-                    DateEntry = transferTime,
-                    LoggedInUserId = loggedInUser.Id,
-                    LoggedInUserFullName = loggedInUser.FullName,
-                    IsActive = true,
-                    WareHouseId = transfer.ToWareHouseId.Value,
-                    ProductId = transfer.ProductId,
-                    SupplierId = product.SupplierId,
-                    IsTransfer = true
-                };
-                _context.Entries.Add(newEntry);
-
-                Exit newExit = new Exit()
-                {
-                    SerialNumber = transfer.SerialNumber,
-                    Amount = transfer.Amount,
-                    Price = product.Price,
-                    TotalValue = transfer.Amount * product.Price,
-                    DateExit = transferTime,
-                    LoggedInUserId = loggedInUser.Id,
-                    LoggedInUserFullName = loggedInUser.FullName,
-                    WareHouseId = transfer.FromWareHouseId.Value,
-                    ProductId = transfer.ProductId,
-                    SupplierId = product.SupplierId,
-                    IsTransfer = true,
-                };
-                _context.Exits.Add(newExit);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive), "Id", "Title", transfer.ProductId);
-            ViewData["FromWareHouses"] = new SelectList(_context.Warehouses.Where(n => n.IsActive), "Id", "Name", transfer.FromWareHouseId);
-            ViewData["ToWareHouses"] = new SelectList(_context.Warehouses.Where(n => n.IsActive), "Id", "Name", transfer.ToWareHouseId);
-            return View(transfer);
-        }
-
+        
         // GET: Transfers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
