@@ -23,63 +23,80 @@
             <table id="TransfersTable" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Kodi T. </th>
-                        <th>Data </th>
+                        <th>Nr. Serisë </th>
+                        <th>Nr. Faturës </th>
+                        <th>Dt. Transfertës </th>
                         <th>Nga magazina </th>
                         <th>Tek magazina </th>
                         <th>Produkti </th>
                         <th>Sasia </th>
                         <th>Cmimi </th>
-                        <th>Vlera Totale</th>
+                        <th>Vlera</th>
+                        <th>TVSH?</th>
+                        <th>Vlera me TVSH</th>
                         <th class="text-center">Veprime</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TransferCode)
-                            </td>
-                            <td>
-                                @item.DateTranfer.ToString("dd/MM/yyyy")
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FromWareHouse.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ToWareHouse.Name)
-                            </td>
-                            <td>
-                                @item.Product.Title
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Amount)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Price)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TotalValue)
-                            </td>
-                            <td class="text-center">
-                                <a asp-action="Details" asp-route-id="@item.Id"
-                                   class="btn btn-icon waves-effect waves-light btn-success">
-                                    <i class="fa fa-eye"></i>
+                    <tr>
+                        <td>
+                            <a asp-action="BillDetails" asp-route-id="@item.SerialNumber">
+                                <b>@item.SerialNumber</b>
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BillNumber)
+                        </td>
+                        <td>
+                            @item.DateTranfer.ToString("dd/MM/yyyy")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FromWareHouse.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ToWareHouse.Name)
+                        </td>
+                        <td>
+                            @item.Product.Title
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalValue)
+                        </td>
+                        <td>
+                            @if (item.Product.HasTVSH)
+                            {
+                                <span>PO</span>
+                            }
+                            else
+                            {
+                                <span>JO</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalValueWithTVSH)
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@item.Id"
+                               class="btn btn-icon waves-effect waves-light btn-default">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                   class="btn btn-icon waves-effect waves-light btn-danger">
+                                    <i class="fa fa-trash"></i>
                                 </a>
-                                <a asp-action="Edit" asp-route-id="@item.Id"
-                                   class="btn btn-icon waves-effect waves-light btn-default">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                                {
-                                    <a asp-action="Delete" asp-route-id="@item.Id"
-                                       class="btn btn-icon waves-effect waves-light btn-danger">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                }
-                            </td>
-                        </tr>
+                            }
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>

@@ -16,13 +16,14 @@ namespace GllavicaInventari.Models
 
         [Key]
         public int Id { get; set; }
-
-        [Required(ErrorMessage = "Kodi i transfertes eshte i detyrueshem")]
-        public string TransferCode { get; set; }
-        public int Amount { get; set; }
+        public string SerialNumber { get; set; }
+        public string BillNumber { get; set; }
+        public double Amount { get; set; }
         public double Price { get; set; }
         public double TotalValue { get; set; }
-        [Required(ErrorMessage = "Data e transfertes eshte e detyrueshme")]
+        public double TotalValueWithTVSH { get; set; }
+
+
         [DataType(DataType.Date)]
         public DateTime DateTranfer { get; set; }
         public string LoggedInUserId { get; set; }

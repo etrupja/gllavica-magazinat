@@ -170,7 +170,6 @@
                 allproducts.find(".productpack").each(function () {
                     var quantity = parseFloat($(this).find("#quantityId").val());
                     var price = parseFloat($(this).find("#priceId").val());
-                    var hasTVSH = parseInt($(this).find("#tvshid").val());
 
                     subtotal = quantity * price;
 
@@ -220,7 +219,6 @@
             var b = $(a).parent().parent().parent();
             var q = parseFloat(b.find("#quantityId").val());
             var p = parseFloat(b.find("#priceId").val());
-            var hasTVSH = parseInt(b.find("#tvshid").val())
 
 
             var d = p * q;
@@ -228,11 +226,6 @@
                 var d = p * q;
                 var t = d + d * 0.20;
                 b.find("#valueid").val(d.toFixed(2));
-                if (hasTVSH == 1) {
-                    b.find("#valueidwithtvsh").val(t.toFixed(2))
-                } else {
-                    b.find("#valueidwithtvsh").val(d.toFixed(2))
-                }
             }
             var b = $(a).parent().parent().parent();
             var allproducts = b.parent();
@@ -242,7 +235,6 @@
             allproducts.find(".productpack").each(function () {
                 var quantity = parseFloat($(this).find("#quantityId").val());
                 var price = parseFloat($(this).find("#priceId").val());
-                var hasTVSH = parseInt($(this).find("#tvshid").val());
 
                 subtotal = quantity * price;
 

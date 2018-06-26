@@ -66,21 +66,37 @@ namespace GllavicaInventari.Controllers
             }
         }
 
-        // GET: Transfers/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null) return NotFound();
+        // GET: Transfers/BillDetails/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null) return NotFound();
 
-            var transfer = await _context.Transfers
-                .Where(n => n.IsActive)
+        //    var transfer = await _context.Transfers
+        //        .Where(n => n.IsActive)
+        //        .Include(t => t.Product)
+        //        .Include(t => t.ToWareHouse)
+        //        .Include(t => t.FromWareHouse)
+        //        .SingleOrDefaultAsync(m => m.Id == id);
+
+        //    if (transfer == null) return NotFound();
+
+        //    return View(transfer);
+        //}
+
+        // GET: Transfers/BillDetails/5
+        public async Task<IActionResult> BillDetails(string id)
+        {
+            string serialNumber = id;
+            if (string.IsNullOrEmpty(serialNumber))  return NotFound();
+
+            var transfers =  await _context.Transfers
+                .Where(n => n.SerialNumber == serialNumber)
                 .Include(t => t.Product)
                 .Include(t => t.ToWareHouse)
                 .Include(t => t.FromWareHouse)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .ToListAsync();
 
-            if (transfer == null) return NotFound();
-
-            return View(transfer);
+            return View(transfers);
         }
 
         // GET: Transfers/Create
@@ -88,20 +104,121 @@ namespace GllavicaInventari.Controllers
         {
             ApplicationUser loggedInUser = GetSignedInUser();
             var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser);
-
-            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive), "Id", "Title");
-            ViewData["FromWareHouses"] = null;
-            ViewData["ToWareHouses"] = new SelectList(_context.Warehouses.Where(n => n.IsActive), "Id", "Name");
             
+            NewTransferViewModel newTransferVM = new NewTransferViewModel()
+            {
+                Suppliers = _context.Suppliers.Where(n => n.IsActive).ToList(),
+                Products = _context.Products.Where(n => n.IsActive).ToList(),
+                ToWarehouses = _context.Warehouses.Where(n => n.IsActive).ToList(),
+                SerialNumber = "",
+                BillNumber = ""
+            };
+            
+
             if ("manager".Equals(loggedInUserRole.First(), StringComparison.InvariantCultureIgnoreCase))
-            {
-                ViewData["FromWareHouses"] = new SelectList(_context.Warehouses.Where(n => n.ApplicationUserId == loggedInUser.Id & n.IsActive), "Id", "Name");
-            }
+                newTransferVM.FromWarehouses = _context.Warehouses.Where(n => n.ApplicationUserId == loggedInUser.Id & n.IsActive);
             else
+                newTransferVM.FromWarehouses = _context.Warehouses.Where(n => n.IsActive);
+
+
+            return View(newTransferVM);
+        }
+
+        // POST: Entries/SaveExit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveTransfer()
+        {
+            int nrproduct = int.Parse(Request.Form["nrproduct"]);
+            if (nrproduct > 0)
             {
-                ViewData["FromWareHouses"] = new SelectList(_context.Warehouses.Where(n => n.IsActive), "Id", "Name");
+                string[] quantities = Request.Form["Quantity[]"];
+                string[] idproduct = Request.Form["Product[]"];
+                string[] prices = Request.Form["Price[]"];
+
+                //int supplierId = int.Parse(Request.Form["supplierid"]);
+
+                var fromWareHouseId = int.Parse(Request.Form["fromWareHouseId"]);
+                var toWareHouseId = int.Parse(Request.Form["toWareHouseId"]);
+
+                var billNumber = Request.Form["billnumber"].FirstOrDefault().ToString();
+                var documentnumber = Request.Form["documentnumber"].FirstOrDefault().ToString();
+
+                DateTime dateNow = DateTime.UtcNow.AddHours(2);
+                string loggedInUserId = GetSignedInUser().Id;
+                string loggedInUserFullName = GetSignedInUser().FullName;
+
+                for (int i = 0; i < nrproduct; i++)
+                {
+                    double amount = double.Parse(quantities[i]);
+                    double price = double.Parse(prices[i]);
+                    int productId = Int32.Parse(idproduct[i]);
+
+                    Product product = _context.Products.FirstOrDefault(n => n.Id == productId);
+
+                    int supplierId = _context.Entries
+                       .Where(n => n.ProductId == productId)
+                       .Include(n => n.Supplier)
+                       .Select(n => n.SupplierId)
+                       .FirstOrDefault();
+
+                    Exit newExit = new Exit()
+                    {
+                        SerialNumber = documentnumber,
+                        WareHouseId = fromWareHouseId,
+                        ProductId = productId,
+                        SupplierId = supplierId,
+                        Amount = amount,
+                        Price = price,
+                        TotalValue = amount * price,
+                        TotalValueWithTVSH = (product.HasTVSH) ? Math.Round(amount * price + amount * price * .20, 2) : Math.Round(amount * price, 2),
+                        LoggedInUserId = loggedInUserId,
+                        LoggedInUserFullName = loggedInUserFullName,
+                        DateExit = dateNow,
+                        IsTransfer = true
+                    };
+                    _context.Exits.Add(newExit);
+                    _context.SaveChanges();
+
+                    Entry entry = new Entry()
+                    {
+                        SerialNumber = documentnumber,
+                        BillNumber = billNumber,
+                        SupplierId = supplierId,
+                        WareHouseId = toWareHouseId,
+                        ProductId = productId,
+                        Amount = amount,
+                        Price = price,
+                        TotalValue = amount * price,
+                        TotalValueWithTVSH = (product.HasTVSH) ? (amount * price + amount * price * .20) : (amount * price),
+                        LoggedInUserId = loggedInUserId,
+                        LoggedInUserFullName = loggedInUserFullName,
+                        DateEntry = dateNow,
+                        IsTransfer = true
+                    };
+                    _context.Entries.Add(entry);
+                    _context.SaveChanges();
+
+
+                    Transfer transfer = new Transfer()
+                    {
+                        SerialNumber = documentnumber,
+                        BillNumber = billNumber,
+                        Amount = amount,
+                        Price = price,
+                        TotalValue = Math.Round(amount*price, 2),
+                        DateTranfer = dateNow,
+                        LoggedInUserId = loggedInUserId,
+                        LoggedInUserFullName = loggedInUserFullName,
+                        FromWareHouseId = fromWareHouseId,
+                        ToWareHouseId = toWareHouseId,
+                        ProductId = productId
+                    };
+                    _context.Transfers.Add(transfer);
+                    _context.SaveChanges();
+                }
             }
-            return View();
+            return RedirectToAction("Index");
         }
 
         // POST: Transfers/Create
@@ -109,7 +226,7 @@ namespace GllavicaInventari.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TransferCode,Amount,DateTranfer,FromWareHouseId,ToWareHouseId,ProductId")] Transfer transfer)
+        public async Task<IActionResult> Create([Bind("SerialNumber,BillNumber,Amount,DateTranfer,FromWareHouseId,ToWareHouseId,ProductId")] Transfer transfer)
         {
             if (ModelState.IsValid)
             {
@@ -135,7 +252,8 @@ namespace GllavicaInventari.Controllers
                 //Create an Exit and an Entry
                 Entry newEntry = new Entry()
                 {
-                    SerialNumber = transfer.TransferCode,
+                    SerialNumber = transfer.SerialNumber,
+                    BillNumber = transfer.BillNumber,
                     Amount = transfer.Amount,
                     Price = product.Price,
                     TotalValue = transfer.Amount * product.Price,
@@ -152,7 +270,7 @@ namespace GllavicaInventari.Controllers
 
                 Exit newExit = new Exit()
                 {
-                    SerialNumber = transfer.TransferCode,
+                    SerialNumber = transfer.SerialNumber,
                     Amount = transfer.Amount,
                     Price = product.Price,
                     TotalValue = transfer.Amount * product.Price,
@@ -183,7 +301,7 @@ namespace GllavicaInventari.Controllers
                 return NotFound();
             }
 
-            var transfer = await _context.Transfers.Where(n => n.IsActive).SingleOrDefaultAsync(m => m.Id == id);
+            var transfer = await _context.Transfers.Include(n => n.FromWareHouse).Include(n => n.ToWareHouse).Where(n => n.IsActive).SingleOrDefaultAsync(m => m.Id == id);
             if (transfer == null)
             {
                 return NotFound();
@@ -199,74 +317,53 @@ namespace GllavicaInventari.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DateTranfer,TransferCode,Amount,FromWareHouseId,ToWareHouseId,ProductId")] Transfer transfer)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,Price,ProductId,SerialNumber")] Transfer model)
         {
-            if (id != transfer.Id)
-            {
-                return NotFound();
-            }
+            if (id != model.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    //find the product if it has changed
-                    double productPrice = _context.Entries
-                        .Where(n => n.ProductId == transfer.ProductId & n.WareHouseId == transfer.FromWareHouseId && n.IsActive)
-                        .OrderByDescending(n => n.DateEntry).Select(n => n.Price).FirstOrDefault();
+                    var transfer = _context.Transfers.FirstOrDefault(n => n.Id == model.Id & n.IsActive);
+                    var transferProduct = _context.Products.FirstOrDefault(n => n.Id == model.ProductId & n.IsActive);
 
-
-                    transfer.Price = productPrice;
-                    transfer.TotalValue = productPrice * transfer.Amount;
-                    transfer.LoggedInUserId = GetSignedInUser().Id;
-                    transfer.LoggedInUserFullName = GetSignedInUser().FullName;
-                    transfer.IsActive = true;
-                    _context.SaveChanges();
-
+                    transfer.ProductId = model.ProductId;
+                    transfer.Amount = model.Amount;
+                    transfer.Price = model.Price;
+                    transfer.TotalValue = Math.Round(model.Price * model.Amount, 2);
+                    transfer.TotalValueWithTVSH = (transferProduct.HasTVSH) ? Math.Round(model.Amount * model.Price + model.Amount * model.Price * .20, 2) : transfer.TotalValue;
+                    await _context.SaveChangesAsync();
 
                     //update the entries and exits
-                    Entry entry = _context
-                        .Entries
-                        .Where(n => n.DateEntry.TrimMilliseconds() == transfer.DateTranfer.TrimMilliseconds() && n.IsTransfer && n.IsActive)
-                        .FirstOrDefault();
-                    entry.SerialNumber = transfer.TransferCode;
-                    entry.Amount = transfer.Amount;
-                    entry.Price = productPrice;
-                    entry.TotalValue = transfer.Amount * productPrice;
-                    entry.WareHouseId = transfer.ToWareHouseId.Value;
-                    entry.ProductId = transfer.ProductId;
+                    Entry entry = _context.Entries.Where(n => n.SerialNumber == model.SerialNumber && n.IsActive && n.IsTransfer).FirstOrDefault();
+                    entry.ProductId = model.ProductId;
+                    entry.Amount = model.Amount;
+                    entry.Price = model.Price;
+                    entry.TotalValue = Math.Round(transfer.Amount * model.Price, 2);
+                    entry.TotalValueWithTVSH = (transferProduct.HasTVSH) ? Math.Round(model.Amount * model.Price + model.Amount*model.Price*.20, 2) : entry.TotalValue;
+                    await _context.SaveChangesAsync();
 
-                    Exit exit = _context
-                        .Exits
-                        .Where(n => n.DateExit.TrimMilliseconds() == transfer.DateTranfer.TrimMilliseconds() && n.IsTransfer && n.IsActive)
-                        .FirstOrDefault();
-                    exit.SerialNumber = transfer.TransferCode;
+                    Exit exit = _context.Exits.Where(n => n.SerialNumber == model.SerialNumber && n.IsTransfer && n.IsActive).FirstOrDefault();
+                    exit.ProductId = model.ProductId;
                     exit.Amount = transfer.Amount;
-                    exit.Price = productPrice;
-                    exit.TotalValue = transfer.Amount * productPrice;
-                    exit.WareHouseId = transfer.FromWareHouseId.Value;
-                    exit.ProductId = transfer.ProductId;
+                    exit.Price = model.Price;
+                    exit.TotalValue = Math.Round(model.Amount * model.Price, 2);
+                    exit.TotalValueWithTVSH = (transferProduct.HasTVSH) ? Math.Round(model.Amount * model.Price + model.Amount * model.Price * .20, 2) : exit.TotalValue;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TransferExists(transfer.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!TransferExists(model.Id)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive), "Id", "Title", transfer.ProductId);
-            ViewData["FromWareHouses"] = new SelectList(_context.Warehouses.Where(n => n.IsActive), "Id", "Name", transfer.FromWareHouseId);
-            ViewData["ToWareHouses"] = new SelectList(_context.Warehouses.Where(n => n.IsActive), "Id", "Name", transfer.ToWareHouseId);
-            return View(transfer);
+            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive), "Id", "Title", model.ProductId);
+            ViewData["FromWareHouses"] = new SelectList(_context.Warehouses.Where(n => n.IsActive), "Id", "Name", model.FromWareHouseId);
+            ViewData["ToWareHouses"] = new SelectList(_context.Warehouses.Where(n => n.IsActive), "Id", "Name", model.ToWareHouseId);
+            return View(model);
         }
-
 
 
         // GET: Transfers/Delete/5

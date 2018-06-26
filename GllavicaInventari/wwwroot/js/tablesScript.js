@@ -249,21 +249,8 @@
 
 
     $("#entryId").bootstrapValidator();
-    $("#exitId").bootstrapValidator();
+    $("#exitId").bootstrapValidator(); 
+    $("#transferId").bootstrapValidator();
     $(".select-product").select();
     $("#supplier-select").select();
-
-    /*$("#exitId").bootstrapValidator();
-    $("#truckId").bootstrapValidator();
-    $("#SaveChangesProductForm").bootstrapValidator();
-    $('[data-toggle="tooltip"]').tooltip();
-    $(".document-date").datetimepicker({
-        format: "DD/MM/YYYY",
-        defaultDate: new Date(),
-    });
-    $('.csutom_select').selectpicker();
-    $('#client-selectpicker').selectpicker();
-    $('.selectpicker').selectpicker();
-    $("#client-select").select2();
-    */
 })

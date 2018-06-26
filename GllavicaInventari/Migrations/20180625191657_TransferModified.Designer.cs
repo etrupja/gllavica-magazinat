@@ -11,9 +11,10 @@ using System;
 namespace GllavicaInventari.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180625191657_TransferModified")]
+    partial class TransferModified
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -243,8 +244,6 @@ namespace GllavicaInventari.Migrations
                     b.Property<int?>("ToWareHouseId");
 
                     b.Property<double>("TotalValue");
-
-                    b.Property<double>("TotalValueWithTVSH");
 
                     b.HasKey("Id");
 

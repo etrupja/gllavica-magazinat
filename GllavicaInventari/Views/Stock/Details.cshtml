@@ -37,7 +37,9 @@
                     {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.SerialNumber)
+                            <a asp-action="BillDetails" asp-controller="Entries" asp-route-id="@item.SerialNumber">
+                                <b>@item.SerialNumber</b>
+                            </a>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Product.Title)
@@ -82,7 +84,9 @@
                     {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.SerialNumber)
+                            <a asp-action="BillDetails" asp-controller="Exits" asp-route-id="@item.SerialNumber">
+                                <b>@item.SerialNumber</b>
+                            </a>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Product.Title)

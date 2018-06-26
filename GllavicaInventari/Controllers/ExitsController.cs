@@ -117,7 +117,7 @@ namespace GllavicaInventari.Controllers
             return View(exitVM);
         }
 
-        // POST: Entries/SaveEntry
+        // POST: Entries/SaveExit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveExit()
@@ -130,6 +130,7 @@ namespace GllavicaInventari.Controllers
                 string[] prices = Request.Form["Price[]"];
                 string[] TVSHs = Request.Form["TVSH[]"];
                 var warehouseId = int.Parse(Request.Form["warehouseid"]);
+                //int supplierId = int.Parse(Request.Form["supplierid"]);
                 var documentnumber = Request.Form["documentnumber"].First().ToString();
 
                 for (int i = 0; i < nrproduct; i++)
@@ -139,10 +140,10 @@ namespace GllavicaInventari.Controllers
                     int productId = Int32.Parse(idproduct[i]);
 
                     int supplierId = _context.Entries
-                        .Where(n => n.ProductId == productId)
-                        .Include(n => n.Supplier)
-                        .Select(n => n.SupplierId)
-                        .FirstOrDefault();
+                       .Where(n => n.ProductId == productId)
+                       .Include(n => n.Supplier)
+                       .Select(n => n.SupplierId)
+                       .FirstOrDefault();
 
                     Product product = _context.Products.FirstOrDefault(n => n.Id == productId);
 

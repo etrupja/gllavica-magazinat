@@ -1,0 +1,124 @@
+﻿@model List<Transfer>
+
+
+<div>
+    <div class="pull-right">
+        <button class="btn btn-default btn-inverse" tabindex="0" onclick="printTransferDetails()"><span><i class="fa fa-print"></i> PRINTO </span></button>
+    </div>
+    <div class="clearfix"></div>
+    <br />
+    <div class="row">
+        <div class="col-12">
+            <div class="card-box table-responsive">
+                <div class="col-sm-12 nopadding">
+                    <br />
+                    <div id="printTransferDetails">
+                        <div class="col-sm-12">
+                            <table class="table no-footer dtr-inline" border="0" style="border-color:white !important">
+                                <tbody>
+                                    <tr>
+                                        <th>Nr. i Serisë</th>
+                                        <th>Dt. e Transfertës</th>
+                                        <th>Nga Magazina</th>
+                                        <th>Tek Magazina</th>
+                                    </tr>
+                                    <tr>
+                                        <td>@Model.First().SerialNumber</td>
+                                        <td>@Model.First().DateTranfer.ToString("dd/MM/yyyy")</td>
+                                        <td>@Model.First().FromWareHouse.Name</td>
+                                        <td>@Model.First().ToWareHouse.Name</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <div class="col-sm-12">
+                            <table class="table table-striped table-bordered dataTable no-footer dtr-inline">
+                                <thead>
+                                    <tr>
+                                        <th>Produkti </th>
+                                        <th>Njësia</th>
+                                        <th>Sasia</th>
+                                        <th>Cmimi</th>
+                                        <th>Totali pa TVSH</th>
+                                        <th>Ka TVSH?</th>
+                                        <th>Totali me TVSH</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @item.Product.Title
+                                            </td>
+                                            <td>
+                                                @item.Product.Unit
+                                            </td>
+                                            <td>
+                                                @item.Amount
+                                            </td>
+                                            <td>
+                                                @item.Price
+                                            </td>
+                                            <td>
+                                                @item.TotalValue
+                                            </td>
+                                            <td>
+                                                @if (item.Product.HasTVSH)
+                                                {
+                                                    <span>PO</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>JO</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @item.TotalValueWithTVSH
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr />
+                        <div class="col-sm-12">
+                        </div>
+                        <div class="clearfix"></div>
+                        <br />
+                        <br />
+                        <br />
+                        <div class="col-sm-6 pull-right">
+                            <table class="table no-footer dtr-inline pull-right" border="0" style="border-color:white !important">
+                                <tbody>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th>TOTALI pa TVSH:</th>
+                                        <th>Totali me TVSH:</th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>@Model.Sum(n => n.TotalValue)</td>
+                                        <td>@Model.Sum(n => n.TotalValueWithTVSH)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function printTransferDetails() {
+        $('#printTransferDetails').printThis({ importCSS: true, importStyle: true, copyTagClasses: true });
+    }
+</script>

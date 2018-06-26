@@ -8,22 +8,26 @@
     <span class="btn-label"><i class="fa fa-backward"></i></span>
     Kthehu tek transfertat
 </a>
-<h2>Fshirja e transfertes me kod: <span class="text-danger">@Model.TransferCode</span> </h2>
+<h4>Fshirja e produktit: <span class="text-danger">@Model.Product.Title</span> nga transferta me nr. serie: <span class="text-success">@Model.SerialNumber</span> </h4>
 
 <div class="visible-lg" style="height: 25px;"></div>
 
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
         <div class="card-box">
-            <h2 class="text-center">Detajet e hyrjes</h2>
+            <h2 class="text-center">Detajet</h2>
             <div class="visible-lg" style="height: 10px;"></div>
 
             <div class="text-center">
                 <table class="table">
                     <tbody>
                         <tr>
-                            <td><b>Kodi transfertes</b></td>
-                            <td>@Model.TransferCode</td>
+                            <td><b>Nr. i Serisë</b></td>
+                            <td>@Model.SerialNumber</td>
+                        </tr>
+                        <tr>
+                            <td><b>Nr. i Faturës</b></td>
+                            <td>@Model.BillNumber</td>
                         </tr>
                         <tr>
                             <td><b>Produkti</b></td>
