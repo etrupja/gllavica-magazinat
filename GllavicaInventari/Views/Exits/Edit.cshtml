@@ -19,6 +19,7 @@
             <form role="form" asp-action="Edit">
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="WareHouseId" />
+                <input type="hidden" asp-for="HasTVSH" />
                 <div class="form-group row">
                     <label class="col-md-6 col-form-label" style="font-size:large">Nr. i Serisë: <span class="text-success"> @Model.SerialNumber</span></label>
                     <label class="col-md-6 col-form-label" style="font-size:large">Data e daljes: <span class="text-success"> @Model.DateExit.ToString("dd/MM/yyyy")</span></label>

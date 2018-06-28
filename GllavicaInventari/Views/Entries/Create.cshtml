@@ -83,7 +83,7 @@
                     <div class="body-product">
                         <br />
                         <div class="row col-sm-12 productpack">
-                            <div class="form-group col-sm-4" style="padding-right: 0;">
+                            <div class="form-group col-sm-3" style="padding-right: 0;">
                                 <label class="control-label productlabel col-sm-12">
                                     Artikulli
                                 </label>
@@ -211,6 +211,10 @@
                 var subtotal = 0;
                 var total = 0;
 
+                var subtotalwithtvsh = 0;
+                var totalwithtvsh = 0;
+
+                var hasTVSH = $("#hastvsh-select").val();
 
                 allproducts.find(".productpack").each(function () {
                     var quantity = parseFloat($(this).find("#quantityId").val());
@@ -220,9 +224,18 @@
 
                     if (subtotal)
                         total += subtotal;
+
+                    if (hasTVSH === 'true')
+                        subtotalwithtvsh = (quantity * price + quantity * price * 0.20);
+                    else
+                        subtotalwithtvsh = quantity * price;
+
+                    if (subtotalwithtvsh)
+                        totalwithtvsh += subtotalwithtvsh;
                 });
 
                 $("#totalId").val(total);
+                $("#totalwithtvshId").val(totalwithtvsh.toFixed(2));
             }
             else {
                 $.Notification.notify('warning', 'top center', 'Kujdes!', 'Duhet minimalisht një artikull për të proceduar me hyrjen!');
@@ -235,8 +248,6 @@
             var q = parseFloat(b.find("#quantityId").val());
             var p = parseFloat(b.find("#priceId").val());
             var hasTVSH = $("#hastvsh-select").val();
-
-            console.log("has TVSH - ", hasTVSH);
 
             if (p && q) {
                 var d = p * q;
@@ -275,10 +286,6 @@
                 
                 if (subtotalwithtvsh)
                     totalwithtvsh += subtotalwithtvsh;
-
-                console.log("total - ", total);
-                console.log("total with TVSH - ", totalwithtvsh);
-
             });
 
             $("#totalId").val(total);

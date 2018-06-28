@@ -42,8 +42,19 @@
                             <td>@Model.Price</td>
                         </tr>
                         <tr>
-                            <td><b>Vlera totale</b></td>
+                            <td><b>Vlera pa TVSH</b></td>
                             <td>@Model.TotalValue</td>
+                        </tr>
+                        <tr>
+                            <td><b>Ka TVSH?</b></td>
+                            <td>
+                                @if (Model.HasTVSH) { <span>PO</span>}
+                                else { <span>JO</span>}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Vlera me TVSH</b></td>
+                            <td>@Model.TotalValueWithTVSH</td>
                         </tr>
                     </tbody>
                 </table>
