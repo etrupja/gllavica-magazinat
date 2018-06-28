@@ -132,6 +132,7 @@ namespace GllavicaInventari.Controllers
                 var warehouseId = int.Parse(Request.Form["warehouseid"]);
                 //int supplierId = int.Parse(Request.Form["supplierid"]);
                 var documentnumber = Request.Form["documentnumber"].First().ToString();
+                bool hasTVSH = Convert.ToBoolean(Request.Form["hastvsh"].FirstOrDefault());
 
                 for (int i = 0; i < nrproduct; i++)
                 {
@@ -156,13 +157,14 @@ namespace GllavicaInventari.Controllers
                         Amount = amount,
                         Price = price,
                         TotalValue = amount * price,
-                        TotalValueWithTVSH = (product.HasTVSH) ? Math.Round(amount * price + amount * price * .20, 2) : Math.Round(amount * price, 2),
+                        HasTVSH = hasTVSH,
+                        TotalValueWithTVSH = (hasTVSH) ? Math.Round(amount * price + amount * price * .20, 2) : Math.Round(amount * price, 2),
                         LoggedInUserId = GetSignedInUser().Id,
                         LoggedInUserFullName = GetSignedInUser().FullName,
                         DateExit = DateTime.UtcNow.AddHours(2)
                     };
                     _context.Exits.Add(newExit);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
             }
             return RedirectToAction("Index");
@@ -214,19 +216,19 @@ namespace GllavicaInventari.Controllers
             {
                 try
                 {
-                    //Find the old entry
-                    Exit oldEntry = _context.Exits.Where(n => n.Id == exit.Id & n.IsActive).FirstOrDefault();
-                    oldEntry.ProductId = exit.ProductId;
-                    oldEntry.Amount = exit.Amount;
-                    oldEntry.Price = exit.Price;
-                    oldEntry.TotalValue = Math.Round(exit.Amount * exit.Price, 2);
+                    //Find the old exit
+                    Exit oldExit = _context.Exits.Where(n => n.Id == exit.Id & n.IsActive).FirstOrDefault();
+                    oldExit.ProductId = exit.ProductId;
+                    oldExit.Amount = exit.Amount;
+                    oldExit.Price = exit.Price;
+                    oldExit.TotalValue = Math.Round(exit.Amount * exit.Price, 2);
 
                     Product product = _context.Products.FirstOrDefault(n => n.Id == exit.ProductId);
 
-                    if (product.HasTVSH)
-                        oldEntry.TotalValueWithTVSH = Math.Round(oldEntry.TotalValue + oldEntry.TotalValue * 0.20, 2);
+                    if (oldExit.HasTVSH)
+                        oldExit.TotalValueWithTVSH = Math.Round(oldExit.TotalValue + oldExit.TotalValue * 0.20, 2);
                     else
-                        oldEntry.TotalValueWithTVSH = oldEntry.TotalValue;
+                        oldExit.TotalValueWithTVSH = oldExit.TotalValue;
 
                     await _context.SaveChangesAsync();
                 }

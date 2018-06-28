@@ -148,8 +148,12 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Amount)
                         </td>
-                        <td></td>
-                        <td></td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalValue)
+                        </td>
                     </tr>
                     }
                 </tbody>

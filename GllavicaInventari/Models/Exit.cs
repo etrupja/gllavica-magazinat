@@ -17,6 +17,7 @@ namespace GllavicaInventari.Models
         public double Amount { get; set; }
         public double Price { get; set; }
         public double TotalValue { get; set; }
+        public bool HasTVSH { get; set; }
         public double TotalValueWithTVSH { get; set; }
 
         public DateTime DateExit { get; set; }

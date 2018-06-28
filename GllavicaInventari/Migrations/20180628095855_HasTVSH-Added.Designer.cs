@@ -11,9 +11,10 @@ using System;
 namespace GllavicaInventari.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180628095855_HasTVSH-Added")]
+    partial class HasTVSHAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,6 +178,8 @@ namespace GllavicaInventari.Migrations
                     b.Property<DateTime>("DateCreated");
 
                     b.Property<string>("Description");
+
+                    b.Property<bool>("HasTVSH");
 
                     b.Property<bool>("IsActive");
 

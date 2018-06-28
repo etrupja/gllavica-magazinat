@@ -17,6 +17,7 @@
         <div class="card-box">
             <form role="form" asp-action="Edit">
                 <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="HasTVSH" />
                 <div class="form-group row">
                     <label class="col-md-4 col-form-label" style="font-size:large">Nr. i Serisë: <span class="text-success"> @Model.SerialNumber</span></label>
                     <label class="col-md-4 col-form-label" style="font-size:large">Nr. i Faturës: <span class="text-success"> @Model.BillNumber</span></label>

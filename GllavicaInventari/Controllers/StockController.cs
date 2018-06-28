@@ -115,7 +115,7 @@ namespace GllavicaInventari.Controllers
                 Stocks = new List<Stock>()
             };
 
-            List<Stock> results = wVM.Entries.GroupBy(d => d.ProductId)
+            List<Stock> resultsEntries = wVM.Entries.GroupBy(d => d.ProductId)
                         .Select(
                             p => new Stock()
                             {
@@ -124,7 +124,7 @@ namespace GllavicaInventari.Controllers
                                 SupplierName = p.First().Supplier.Name,
                                 Unit = p.First().Product.Unit,
                                 Amount = p.Sum(n => n.Amount),
-                                Price = p.First().Price,
+                                Price = p.LastOrDefault().Price,
                                 TotalValue = p.Sum(n => n.TotalValue),
                             }).ToList();
 
@@ -137,17 +137,17 @@ namespace GllavicaInventari.Controllers
                                 SupplierName = p.First().Supplier.Name,
                                 Unit = p.First().Product.Unit,
                                 Amount = p.Sum(n => n.Amount),
-                                Price = p.First().Price,
+                                Price = p.LastOrDefault().Price,
                                 TotalValue = p.Sum(n => n.TotalValue),
                             }).ToList();
 
-            foreach (Stock stock in results)
+            foreach (Stock stock in resultsEntries)
             {
                 var product = resultsExits.Where(n => n.ProductId == stock.ProductId).FirstOrDefault();
                 stock.Amount -= (product == null) ? 0 : product.Amount;
                 stock.TotalValue -= (product == null) ? 0 : product.TotalValue;
             }
-            wVM.Stocks.AddRange(results);
+            wVM.Stocks.AddRange(resultsEntries);
 
 
             return View(wVM);

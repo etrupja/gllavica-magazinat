@@ -21,7 +21,7 @@
                 <div class="panel-body">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="col-sm-12 col-sm-12 col-lg-12" style="min-height: 250px;border-bottom: 1px solid #cfcfd6;">
-                        <div class="form-group col-sm-6">
+                        <div class="form-group col-sm-4">
                             <label class="control-label">Nr. i serisë</label>
                             <div class="input-group">
                                 <div class="input-group-addon">
@@ -30,13 +30,25 @@
                                 <input type="text" required class="form-control" data-bv-notempty-message="Nr. i serise nuk mund të lihet bosh!" name="documentnumber" value="@Model.SerialNumber">
                             </div>
                         </div>
-                        <div class="form-group col-sm-6">
+                        <div class="form-group col-sm-4">
                             <label class="control-label">Numër fature</label>
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calculator" aria-hidden="true"></i>
                                 </div>
                                 <input type="text" required class="form-control" data-bv-notempty-message="Numri faturës nuk mund të lihet bosh!" name="billnumber" value="@Model.BillNumber">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">Fature me TVSH?</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-money" aria-hidden="true"></i>
+                                </div>
+                                <select class="form-control" id="hastvsh-select" name="hastvsh" required title="Zgjidh TVSH..." data-bv-notempty-message="Zgjidh nese fatura ka TVSH!" data-style="btn-default" data-live-search="true">
+                                    <option value="true" selected>PO</option>
+                                    <option value="false">JO</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group col-sm-6" style="display:block">
@@ -71,11 +83,9 @@
                     <div class="body-product">
                         <br />
                         <div class="row col-sm-12 productpack">
-                            <div class="form-group col-sm-5" style="padding-right: 0;">
+                            <div class="form-group col-sm-4" style="padding-right: 0;">
                                 <label class="control-label productlabel col-sm-12">
                                     Artikulli
-                                    <i class="fa fa-plus-square" style="cursor:pointer" data-url="CreateProductShortForm" data-form="SaveProductForm" data-action="PRODUKT" onclick="CreateElement(this)"></i>
-
                                 </label>
                                 <div>
                                     <select name="Product[]" required="required" class="form-control select-product show-tick" title="Zgjidh artikull..." data-live-search="true" data-bv-notempty-message="Artikulli nuk mund të lihet bosh!">
@@ -102,11 +112,14 @@
                             </div>
                             <div class="form-group col-sm-2" style="padding-right: 0;">
                                 <label> Vlera </label>
-                                <input type="text" readonly name="SubtotalValue[]" id="valueid" class="form-control text-box single-line" min="0" style="background: white;" />
+                                <input type="text" readonly="readonly" name="SubtotalValue[]" id="valueid" class="form-control text-box single-line" min="0" style="background: white;" />
+                            </div>
+                            <div class="form-group col-sm-2" style="padding-right: 0;">
+                                <label> Vlera me TVSH </label>
+                                <input type="text" readonly="readonly" id="valuewithtvshid" class="form-control text-box single-line" min="0" style="background: white;" />
                             </div>
                             <button type="button" class="btn pull-right remove  btn-responsive button-alignment btn-danger active" onclick="removeProduct(this)" style="margin-bottom:7px;    margin-top: 25px;" data-toggle="button" aria-pressed="true"><i class="fa fa-minus" aria-hidden="true"></i> </button>
                         </div>
-
                     </div>
 
                     <div class="col-sm-3 pull-right" style="margin-top: 10px;">
@@ -115,6 +128,10 @@
                     <div class="clearfix"></div>
                     <br />
                     <div class="col-sm-12" style="min-height: 70px;  border-bottom: 1px solid #cfcfd6;">
+                        <div class="col-sm-3 pull-right">
+                            <label><strong> Totali me TVSH</strong></label>
+                            <input type="text" readonly class="form-control" name="Model.Header.total" id="totalwithtvshId">
+                        </div>
                         <div class="col-sm-3 pull-right">
                             <label><strong> Totali pa TVSH</strong></label>
                             <input type="text" readonly class="form-control" name="Model.Header.total" id="totalId">
@@ -201,7 +218,7 @@
 
                     subtotal = quantity * price;
 
-                    if (subtotal) 
+                    if (subtotal)
                         total += subtotal;
                 });
 
@@ -210,36 +227,62 @@
             else {
                 $.Notification.notify('warning', 'top center', 'Kujdes!', 'Duhet minimalisht një artikull për të proceduar me hyrjen!');
             }
-
         }
+
 
         function calculateValue(a) {
             var b = $(a).parent().parent().parent();
             var q = parseFloat(b.find("#quantityId").val());
             var p = parseFloat(b.find("#priceId").val());
-            
+            var hasTVSH = $("#hastvsh-select").val();
+
+            console.log("has TVSH - ", hasTVSH);
+
             if (p && q) {
                 var d = p * q;
                 b.find("#valueid").val((p * q).toFixed(2));
+                //check if the entry is with VAT (TVSH)
+                if (hasTVSH === 'true') {
+                    b.find("#valuewithtvshid").val((p * q + p * q * 0.20).toFixed(2));
+                } else {
+                    b.find("#valuewithtvshid").val((p * q).toFixed(2));
+                }
             }
 
             var b = $(a).parent().parent().parent();
             var allproducts = b.parent();
+
             var subtotal = 0;
+            var subtotalwithtvsh = 0;
+
             var total = 0;
+            var totalwithtvsh = 0;
 
             allproducts.find(".productpack").each(function () {
                 var quantity = parseFloat($(this).find("#quantityId").val());
                 var price = parseFloat($(this).find("#priceId").val());
 
+
                 subtotal = quantity * price;
-              
+
                 if (subtotal)
                     total += subtotal;
+
+                if (hasTVSH === 'true')
+                    subtotalwithtvsh = (quantity * price + quantity * price * 0.20);
+                else
+                    subtotalwithtvsh = quantity * price;
+                
+                if (subtotalwithtvsh)
+                    totalwithtvsh += subtotalwithtvsh;
+
+                console.log("total - ", total);
+                console.log("total with TVSH - ", totalwithtvsh);
+
             });
 
-            console.log("total - ", total);
             $("#totalId").val(total);
+            $("#totalwithtvshId").val(totalwithtvsh);
         }
     </script>
 }

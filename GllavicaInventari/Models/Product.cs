@@ -19,7 +19,6 @@ namespace GllavicaInventari.Models
         [Required(ErrorMessage = "Mungon emrtimi artikullit")]
         public string Title { get; set; }
         public string Description { get; set; }
-        public bool HasTVSH { get; set; }
         [Required(ErrorMessage = "Mungon njesia")]
         public string Unit { get; set; }
         public DateTime DateCreated { get; set; }

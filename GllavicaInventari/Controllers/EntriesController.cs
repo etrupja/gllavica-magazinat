@@ -159,6 +159,7 @@ namespace GllavicaInventari.Controllers
                 var warehouseId = int.Parse(Request.Form["warehouseid"]);
                 var billNumber = Request.Form["billnumber"].FirstOrDefault().ToString();
                 var documentnumber = Request.Form["documentnumber"].FirstOrDefault().ToString();
+                bool hasTVSH =Convert.ToBoolean(Request.Form["hastvsh"].FirstOrDefault());
 
                 for (int i = 0; i < nrproduct; i++)
                 {
@@ -177,13 +178,14 @@ namespace GllavicaInventari.Controllers
                         Amount = amount,
                         Price = price,
                         TotalValue = amount * price,
-                        TotalValueWithTVSH = (product.HasTVSH) ? (amount * price + amount * price * .20) : (amount * price),
+                        HasTVSH = hasTVSH,
+                        TotalValueWithTVSH = (hasTVSH) ? (amount * price + amount * price * .20) : (amount * price),
                         LoggedInUserId = GetSignedInUser().Id,
                         LoggedInUserFullName = GetSignedInUser().FullName,
                         DateEntry = DateTime.UtcNow.AddHours(2)
                     };
                     _context.Entries.Add(entry);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
             }
             return RedirectToAction("Index");
@@ -224,7 +226,7 @@ namespace GllavicaInventari.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Price,Amount,ProductId")] Entry entry)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Price,Amount,ProductId,HasTVSH")] Entry entry)
         {
             if (id != entry.Id) return NotFound();
 
@@ -239,9 +241,7 @@ namespace GllavicaInventari.Controllers
                     oldEntry.Price = entry.Price;
                     oldEntry.TotalValue = Math.Round(entry.Amount * entry.Price, 2);
 
-                    Product product = _context.Products.FirstOrDefault(n => n.Id == entry.ProductId);
-
-                    if (product.HasTVSH)
+                    if (oldEntry.HasTVSH)
                         oldEntry.TotalValueWithTVSH = Math.Round(oldEntry.TotalValue + oldEntry.TotalValue * 0.20,2);
                     else
                         oldEntry.TotalValueWithTVSH = oldEntry.TotalValue;
@@ -278,7 +278,7 @@ namespace GllavicaInventari.Controllers
         }
 
         // GET: Entries/Delete/5
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -297,7 +297,7 @@ namespace GllavicaInventari.Controllers
         // POST: Entries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var entry = await _context.Entries.SingleOrDefaultAsync(m => m.Id == id & m.IsActive);

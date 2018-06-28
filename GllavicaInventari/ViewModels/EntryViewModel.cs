@@ -13,5 +13,6 @@ namespace GllavicaInventari.ViewModels
         public IEnumerable<Product> Products { get; set; }
         public string SerialNumber { get; set; }
         public string BillNumber { get; set; }
+        public bool HasTVSH { get; set; }
     }
 }

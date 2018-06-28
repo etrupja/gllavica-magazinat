@@ -252,5 +252,6 @@
     $("#exitId").bootstrapValidator(); 
     $("#transferId").bootstrapValidator();
     $(".select-product").select();
+    $("#hastvsh-select").select();
     $("#supplier-select").select();
 })

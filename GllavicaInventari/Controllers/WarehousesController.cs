@@ -31,24 +31,6 @@ namespace GllavicaInventari.Controllers
                 .ToListAsync());
         }
 
-        // GET: Warehouses/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var warehouse = await _context.Warehouses
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (warehouse == null)
-            {
-                return NotFound();
-            }
-
-            return View(warehouse);
-        }
-
         // GET: Warehouses/Create
         public IActionResult Create()
         {

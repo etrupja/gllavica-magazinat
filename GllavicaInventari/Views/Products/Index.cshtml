@@ -26,7 +26,6 @@
                         <th>Emri </th>
                         <th>Pershkrimi</th>
                         <th>Njësia</th>
-                        <th>Ka TVSH?</th>
                         <th class="text-center">Veprime</th>
                     </tr>
                 </thead>
@@ -42,18 +41,6 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Unit)
-                        </td>
-                        <td>
-                            @if(item.HasTVSH == true)
-                            {
-                                <span>PO</span>
-                            }
-                            else
-                            {
-                                <span>JO</span>
-
-                            }
-                            @*@Html.DisplayFor(modelItem => item.HasTVSH)*@
                         </td>
                         <td class="text-center">
                             <a asp-action="Details" asp-route-id="@item.Id"

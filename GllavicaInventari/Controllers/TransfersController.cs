@@ -143,7 +143,8 @@ namespace GllavicaInventari.Controllers
 
                 var billNumber = Request.Form["billnumber"].FirstOrDefault().ToString();
                 var documentnumber = Request.Form["documentnumber"].FirstOrDefault().ToString();
-
+                bool hasTVSH = Convert.ToBoolean(Request.Form["hastvsh"].FirstOrDefault());
+                
                 DateTime dateNow = DateTime.UtcNow.AddHours(2);
                 string loggedInUserId = GetSignedInUser().Id;
                 string loggedInUserFullName = GetSignedInUser().FullName;
@@ -171,14 +172,15 @@ namespace GllavicaInventari.Controllers
                         Amount = amount,
                         Price = price,
                         TotalValue = amount * price,
-                        TotalValueWithTVSH = (product.HasTVSH) ? Math.Round(amount * price + amount * price * .20, 2) : Math.Round(amount * price, 2),
+                        HasTVSH = hasTVSH,
+                        TotalValueWithTVSH = (hasTVSH) ? Math.Round(amount * price + amount * price * .20, 2) : Math.Round(amount * price, 2),
                         LoggedInUserId = loggedInUserId,
                         LoggedInUserFullName = loggedInUserFullName,
                         DateExit = dateNow,
                         IsTransfer = true
                     };
                     _context.Exits.Add(newExit);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     Entry entry = new Entry()
                     {
@@ -190,14 +192,15 @@ namespace GllavicaInventari.Controllers
                         Amount = amount,
                         Price = price,
                         TotalValue = amount * price,
-                        TotalValueWithTVSH = (product.HasTVSH) ? (amount * price + amount * price * .20) : (amount * price),
+                        HasTVSH = hasTVSH,
+                        TotalValueWithTVSH = (hasTVSH) ? (amount * price + amount * price * .20) : (amount * price),
                         LoggedInUserId = loggedInUserId,
                         LoggedInUserFullName = loggedInUserFullName,
                         DateEntry = dateNow,
                         IsTransfer = true
                     };
                     _context.Entries.Add(entry);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
 
                     Transfer transfer = new Transfer()
@@ -207,7 +210,8 @@ namespace GllavicaInventari.Controllers
                         Amount = amount,
                         Price = price,
                         TotalValue = Math.Round(amount*price, 2),
-                        TotalValueWithTVSH = Math.Round(amount * price + amount * price * .20, 2),
+                        HasTVSH = hasTVSH,
+                        TotalValueWithTVSH = (hasTVSH) ? Math.Round(amount * price + amount * price * .20, 2) : Math.Round(amount * price, 2),
                         DateTranfer = dateNow,
                         LoggedInUserId = loggedInUserId,
                         LoggedInUserFullName = loggedInUserFullName,
@@ -216,7 +220,7 @@ namespace GllavicaInventari.Controllers
                         ProductId = productId
                     };
                     _context.Transfers.Add(transfer);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
             }
             return RedirectToAction("Index");
@@ -246,7 +250,7 @@ namespace GllavicaInventari.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,Price,ProductId,SerialNumber")] Transfer model)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,Price,ProductId,SerialNumber,HasTVSH")] Transfer model)
         {
             if (id != model.Id) return NotFound();
 
@@ -261,7 +265,8 @@ namespace GllavicaInventari.Controllers
                     transfer.Amount = model.Amount;
                     transfer.Price = model.Price;
                     transfer.TotalValue = Math.Round(model.Price * model.Amount, 2);
-                    transfer.TotalValueWithTVSH = (transferProduct.HasTVSH) ? Math.Round(model.Amount * model.Price + model.Amount * model.Price * .20, 2) : transfer.TotalValue;
+                    transfer.HasTVSH = model.HasTVSH;
+                    transfer.TotalValueWithTVSH = (model.HasTVSH) ? Math.Round(model.Amount * model.Price + model.Amount * model.Price * .20, 2) : transfer.TotalValue;
                     await _context.SaveChangesAsync();
 
                     //update the entries and exits
@@ -270,7 +275,8 @@ namespace GllavicaInventari.Controllers
                     entry.Amount = model.Amount;
                     entry.Price = model.Price;
                     entry.TotalValue = Math.Round(transfer.Amount * model.Price, 2);
-                    entry.TotalValueWithTVSH = (transferProduct.HasTVSH) ? Math.Round(model.Amount * model.Price + model.Amount*model.Price*.20, 2) : entry.TotalValue;
+                    entry.HasTVSH = model.HasTVSH;
+                    entry.TotalValueWithTVSH = (model.HasTVSH) ? Math.Round(model.Amount * model.Price + model.Amount*model.Price*.20, 2) : entry.TotalValue;
                     await _context.SaveChangesAsync();
 
                     Exit exit = _context.Exits.Where(n => n.SerialNumber == model.SerialNumber && n.IsTransfer && n.IsActive).FirstOrDefault();
@@ -278,7 +284,8 @@ namespace GllavicaInventari.Controllers
                     exit.Amount = transfer.Amount;
                     exit.Price = model.Price;
                     exit.TotalValue = Math.Round(model.Amount * model.Price, 2);
-                    exit.TotalValueWithTVSH = (transferProduct.HasTVSH) ? Math.Round(model.Amount * model.Price + model.Amount * model.Price * .20, 2) : exit.TotalValue;
+                    exit.HasTVSH = model.HasTVSH;
+                    exit.TotalValueWithTVSH = (model.HasTVSH) ? Math.Round(model.Amount * model.Price + model.Amount * model.Price * .20, 2) : exit.TotalValue;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
