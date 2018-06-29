@@ -26,7 +26,7 @@ namespace GllavicaInventari
         public void ConfigureServices(IServiceCollection services)
         {
             //string cString = @"Data Source=ERVIS-PC\SQLEXPRESS;Initial Catalog=GllavicaInventory;Integrated Security=True";
-            string cString = @"Server=gllavica.database.windows.net;Initial Catalog=GllavicaInventory;Persist Security Info=False;User ID=gllavica;Password=Inventari2018?!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            string cString = @"Server=mi3-wsq2.a2hosting.com;Initial Catalog=etrupjac_magazinat;Persist Security Info=False;User ID=etrupjac_magazinat;Password=iWork2017?!;";
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(cString));
 
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
@@ -51,6 +51,11 @@ namespace GllavicaInventari
                 options.Cookie.Expiration = TimeSpan.FromDays(5);
                 options.LoginPath = "/Account/Login";
             });
+
+            //services.Configure<IISOptions>(options =>
+            //{
+            //    options.ForwardClientCertificate = false;
+            //});
 
             services.AddMvc();
         }

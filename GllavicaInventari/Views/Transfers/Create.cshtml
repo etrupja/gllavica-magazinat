@@ -20,7 +20,7 @@
                 <div class="panel-body">
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     <div class="col-sm-12 col-sm-12 col-lg-12" style="min-height: 250px;border-bottom: 1px solid #cfcfd6;">
-                        <div class="form-group col-sm-6">
+                        <div class="form-group col-sm-4">
                             <label class="control-label">Nr. i serisë</label>
                             <div class="input-group">
                                 <div class="input-group-addon">
@@ -29,13 +29,25 @@
                                 <input type="text" required class="form-control" data-bv-notempty-message="Nr. i serise nuk mund të lihet bosh!" name="documentnumber" value="@Model.SerialNumber">
                             </div>
                         </div>
-                        <div class="form-group col-sm-6">
+                        <div class="form-group col-sm-4">
                             <label class="control-label">Numër fature</label>
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calculator" aria-hidden="true"></i>
                                 </div>
                                 <input type="text" required class="form-control" data-bv-notempty-message="Numri faturës nuk mund të lihet bosh!" name="billnumber" value="@Model.BillNumber">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">Fature me TVSH?</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-money" aria-hidden="true"></i>
+                                </div>
+                                <select class="form-control" id="hastvsh-select" name="hastvsh" required title="Zgjidh TVSH..." data-bv-notempty-message="Zgjidh nese fatura ka TVSH!" data-style="btn-default" data-live-search="true">
+                                    <option value="true" selected>PO</option>
+                                    <option value="false">JO</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">

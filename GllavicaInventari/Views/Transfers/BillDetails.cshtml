@@ -66,14 +66,10 @@
                                                 @item.TotalValue
                                             </td>
                                             <td>
-                                                @if (item.Product.HasTVSH)
-                                                {
-                                                    <span>PO</span>
-                                                }
+                                                @if (item.HasTVSH)
+                                                {<span>PO</span>}
                                                 else
-                                                {
-                                                    <span>JO</span>
-                                                }
+                                                {<span>JO</span>}
                                             </td>
                                             <td>
                                                 @item.TotalValueWithTVSH

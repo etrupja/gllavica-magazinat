@@ -40,63 +40,59 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <tr>
-                        <td>
-                            <a asp-action="BillDetails" asp-route-id="@item.SerialNumber">
-                                <b>@item.SerialNumber</b>
-                            </a>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.BillNumber)
-                        </td>
-                        <td>
-                            @item.DateTranfer.ToString("dd/MM/yyyy")
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FromWareHouse.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ToWareHouse.Name)
-                        </td>
-                        <td>
-                            @item.Product.Title
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Amount)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Price)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TotalValue)
-                        </td>
-                        <td>
-                            @if (item.Product.HasTVSH)
-                            {
-                                <span>PO</span>
-                            }
-                            else
-                            {
-                                <span>JO</span>
-                            }
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TotalValueWithTVSH)
-                        </td>
-                        <td class="text-center">
-                            <a asp-action="Edit" asp-route-id="@item.Id"
-                               class="btn btn-icon waves-effect waves-light btn-default">
-                                <i class="fa fa-edit"></i>
-                            </a>
-                            @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                            {
-                                <a asp-action="Delete" asp-route-id="@item.Id"
-                                   class="btn btn-icon waves-effect waves-light btn-danger">
-                                    <i class="fa fa-trash"></i>
+                        <tr>
+                            <td>
+                                <a asp-action="BillDetails" asp-route-id="@item.SerialNumber">
+                                    <b>@item.SerialNumber</b>
                                 </a>
-                            }
-                        </td>
-                    </tr>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BillNumber)
+                            </td>
+                            <td>
+                                @item.DateTranfer.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FromWareHouse.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ToWareHouse.Name)
+                            </td>
+                            <td>
+                                @item.Product.Title
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Amount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalValue)
+                            </td>
+                            <td>
+                                @if (item.HasTVSH)
+                                {<span>PO</span>}
+                                else
+                                {<span>JO</span>}
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalValueWithTVSH)
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.Id"
+                                   class="btn btn-icon waves-effect waves-light btn-default">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                       class="btn btn-icon waves-effect waves-light btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
