@@ -246,6 +246,32 @@
         window.location.href = "/Stock/Details/" + id + "/" + dateStart + "/" + dateEnd;
     });
 
+    $("#entries_datepicker_from").datepicker({ format: 'mm-dd-yyyy' }).on("changeDate", function () {
+        //let id = $("#wareHouseDetailsId").val();
+        let dateStart = $(this).val();
+        let dateEnd = $("#entries_datepicker_to").val();
+        window.location.href = "/Entries/Index/" + dateStart + "/" + dateEnd;
+    });
+
+    $("#entries_datepicker_to").datepicker({ format: 'mm-dd-yyyy' }).on("changeDate", function () {
+        //let id = $("#wareHouseDetailsId").val();
+        let dateEnd = $(this).val();
+        let dateStart = $("#entries_datepicker_from").val();
+        window.location.href = "/Entries/Index/" + dateStart + "/" + dateEnd;
+    });
+
+    $("#exits_datepicker_from").datepicker({ format: 'mm-dd-yyyy' }).on("changeDate", function () {
+        let dateStart = $(this).val();
+        let dateEnd = $("#exits_datepicker_to").val();
+        window.location.href = "/Exits/Index/" + dateStart + "/" + dateEnd;
+    });
+
+    $("#exits_datepicker_to").datepicker({ format: 'mm-dd-yyyy' }).on("changeDate", function () {
+        let dateEnd = $(this).val();
+        let dateStart = $("#exits_datepicker_from").val();
+        window.location.href = "/Exits/Index/" + dateStart + "/" + dateEnd;
+    });
+
 
 
     $("#entryId").bootstrapValidator();
@@ -254,4 +280,5 @@
     $(".select-product").select();
     $("#hastvsh-select").select();
     $("#supplier-select").select();
+
 })

@@ -30,32 +30,24 @@ namespace GllavicaInventari.Controllers
         }
 
         // GET: Entries
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime? dateStart, DateTime? dateEnd)
         {
             ApplicationUser loggedInUser = GetSignedInUser();
             var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser);
 
-            //List<EntryListViewModel> results = _context.Entries.GroupBy(d => d.SerialNumber)
-            //           .Select(
-            //               p => new EntryListViewModel()
-            //               {
-            //                   SerialNumber = p.First().SerialNumber,
-            //                   BillNumber = p.First().BillNumber,
-            //                   WareHouseName = p.First().WareHouse.Name,
-            //                   DateEntry = p.First().DateEntry,
-            //                   TotalValue = p.Sum(n => n.TotalValue),
-            //                   TotalValueWithTVH = p.Sum(n => n.TotalValueWithTVSH),
-            //                   SupplierName = p.First().Supplier.Name,
-            //                   LoggedInUserFullName = p.First().LoggedInUserFullName,
-            //                   LoggedInUserId = p.First().LoggedInUserId,
-            //               }).ToList();
+            if (!dateStart.HasValue)
+                dateStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            if (!dateEnd.HasValue)
+                dateEnd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 
+            ViewBag.DateStart = dateStart;
+            ViewBag.DateEnd = dateEnd;
 
             if ("manager".Equals(loggedInUserRole.First(), StringComparison.InvariantCultureIgnoreCase))
             {
                 var entries = _context
                     .Entries
-                    .Where(n => n.LoggedInUserId == loggedInUser.Id & n.IsActive)
+                    .Where(n => n.LoggedInUserId == loggedInUser.Id && n.IsActive && n.DateEntry >= dateStart && n.DateEntry <= dateEnd.Value.AddHours(23).AddMinutes(59).AddSeconds(59))
                     .Include(e => e.Supplier)
                     .Include(n => n.Product)
                     .Include(e => e.WareHouse);
@@ -65,7 +57,7 @@ namespace GllavicaInventari.Controllers
             {
                 var entries = _context
                     .Entries
-                    .Where(e => e.IsActive)
+                    .Where(n => n.IsActive && n.DateEntry >= dateStart && n.DateEntry <= dateEnd.Value.AddHours(23).AddMinutes(59).AddSeconds(59))
                     .Include(e => e.Supplier)
                     .Include(e => e.WareHouse)
                     .Include(n => n.Product);

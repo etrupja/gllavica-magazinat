@@ -10,16 +10,19 @@
     <span class="btn-label"><i class="fa fa-plus"></i></span>
     Shto Dalje
 </a>
-<h2>Te gjitha daljet</h2>
+<h3>
+    Daljet nga data <span class="text-success">@ViewBag.DateStart.ToString("dd/MM/yyyy")</span> në datën <span class="text-success">@ViewBag.DateEnd.ToString("dd/MM/yyyy")</span>
+</h3>
 
 <div class="row">
     <div class="col-12">
         <div class="card-box table-responsive">
-            <h4 class="m-t-0 header-title">Lista e daljeve</h4>
-            <p class="text-muted font-14 m-b-30">
-                Kjo eshte lista e te gjithe daljeve qe ju keni.
+            <p id="date_filter" class="text-center">
+                <span class="ti-calendar"></span> Nga data <input class="datepicker" type="text" id="exits_datepicker_from" value="@ViewBag.DateStart.ToString("MM-dd-yyyy")" />
+                - deri në datën 
+                <span class="ti-calendar"></span>  <input class="datepicker" type="text" id="exits_datepicker_to" value="@ViewBag.DateEnd.ToString("MM-dd-yyyy")" />
             </p>
-
+            <hr />
             <table id="ExitsTable" class="table table-bordered">
                 <thead>
                     <tr>

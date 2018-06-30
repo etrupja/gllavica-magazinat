@@ -167,19 +167,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        $(document).ready(function () {
-
-            let entry = $("#entry").text();
-            let exit = $("#exit").text();
-            let stock = $("#stock").text();
-
-            $('#sparkline3').sparkline([parseFloat(exit) / parseFloat(entry) * 100, parseFloat(stock) / parseFloat(entry) * 100], {
-                type: 'pie',
-                width: '165',
-                height: '165',
-                sliceColors: ['#f05050', '#ffbd4a']
-            });
-        });
-    </script>
 }

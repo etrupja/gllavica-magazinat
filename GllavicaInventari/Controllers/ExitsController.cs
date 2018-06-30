@@ -29,16 +29,25 @@ namespace GllavicaInventari.Controllers
         }
 
         // GET: Exits
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime? dateStart, DateTime? dateEnd)
         {
             ApplicationUser loggedInUser = GetSignedInUser();
             var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser);
+
+            if (!dateStart.HasValue)
+                dateStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            if (!dateEnd.HasValue)
+                dateEnd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+
+            ViewBag.DateStart = dateStart;
+            ViewBag.DateEnd = dateEnd;
+
 
             if ("manager".Equals(loggedInUserRole.First(), StringComparison.InvariantCultureIgnoreCase))
             {
                 var exits = _context
                 .Exits
-                .Where(n => n.LoggedInUserId == loggedInUser.Id & n.IsActive)
+                .Where(n => n.LoggedInUserId == loggedInUser.Id & n.IsActive && n.DateExit >= dateStart && n.DateExit <= dateEnd.Value.AddHours(23).AddMinutes(59).AddSeconds(59))
                 .Include(e => e.Product)
                 .Include(e => e.Supplier)
                 .Include(e => e.WareHouse);
@@ -48,7 +57,7 @@ namespace GllavicaInventari.Controllers
             {
                 var exits = _context
                 .Exits
-                .Where(n => n.IsActive)
+                .Where(n => n.IsActive && n.DateExit >= dateStart && n.DateExit <= dateEnd.Value.AddHours(23).AddMinutes(59).AddSeconds(59))
                 .Include(e => e.Product)
                 .Include(e => e.Supplier)
                 .Include(e => e.WareHouse);

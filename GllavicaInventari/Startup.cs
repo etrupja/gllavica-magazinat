@@ -26,7 +26,8 @@ namespace GllavicaInventari
         public void ConfigureServices(IServiceCollection services)
         {
             //string cString = @"Data Source=ERVIS-PC\SQLEXPRESS;Initial Catalog=GllavicaInventory;Integrated Security=True";
-            string cString = @"Server=mi3-wsq2.a2hosting.com;Initial Catalog=etrupjac_magazinat;Persist Security Info=False;User ID=etrupjac_magazinat;Password=iWork2017?!;";
+            string cString = @"Server=70.32.28.3;Initial Catalog=gllavica-magazinat;Persist Security Info=False;User ID=gllavica_admin;Password=B5l5v_0k;";
+
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(cString));
 
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
@@ -51,12 +52,7 @@ namespace GllavicaInventari
                 options.Cookie.Expiration = TimeSpan.FromDays(5);
                 options.LoginPath = "/Account/Login";
             });
-
-            //services.Configure<IISOptions>(options =>
-            //{
-            //    options.ForwardClientCertificate = false;
-            //});
-
+            
             services.AddMvc();
         }
 
@@ -90,9 +86,15 @@ namespace GllavicaInventari
                 //routes.MapRoute(
                 //    name: "entryDetails",
                 //    template: "{controller=Entries}/{action=BillDetails}/{serialNumber}");
-                //routes.MapRoute(
-                //    name: "stocksfilter",
-                //    template: "{controller=Stock}/{action=Details}/{id}/{dateStart}/{dateEnd}");
+                routes.MapRoute(
+                   name: "entriesfilter",
+                   template: "{controller=Entries}/{action=Index}/{dateStart}/{dateEnd}");
+                routes.MapRoute(
+                   name: "exitsfilter",
+                   template: "{controller=Exits}/{action=Index}/{dateStart}/{dateEnd}");
+                routes.MapRoute(
+                    name: "stocksfilter",
+                    template: "{controller=Stock}/{action=Details}/{id}/{dateStart}/{dateEnd}");
                 //routes.MapRoute(
                 //   name: "stocksdetails",
                 //   template: "{controller=Stock}/{action=Details}/{id}");
