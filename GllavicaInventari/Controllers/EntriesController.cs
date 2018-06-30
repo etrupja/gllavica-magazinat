@@ -153,6 +153,12 @@ namespace GllavicaInventari.Controllers
                 var documentnumber = Request.Form["documentnumber"].FirstOrDefault().ToString();
                 bool hasTVSH =Convert.ToBoolean(Request.Form["hastvsh"].FirstOrDefault());
 
+                if (_context.Entries.Any(n=> n.SerialNumber == documentnumber))
+                {
+                    TempData["Error"] = "Ky numer serial ekziston! Ju lutem kontrollojeni numrin përsëri!";
+                    return RedirectToAction("Create");
+                }
+
                 for (int i = 0; i < nrproduct; i++)
                 {
                     double amount = double.Parse(quantities[i]);

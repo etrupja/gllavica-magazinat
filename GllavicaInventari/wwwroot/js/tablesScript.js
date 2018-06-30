@@ -7,7 +7,7 @@
             {
                 extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
                 exportOptions: {
-                    columns: [0, 1, 2, 3],
+                    columns: [0, 1, 2],
                 },
                 customize: function (win) {
                     $(win.document.body).find('table').addClass('display').css('font-size', '16px');
@@ -21,13 +21,13 @@
                     $(win.document.body).find('h1').css('text-align', 'center');
                 },
                 printOptions: {
-                    columns: [0, 1, 2, 3]
+                    columns: [0, 1, 2]
                 }
             },
             {
                 extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
                 exportOptions: {
-                    columns: [0, 1, 2, 3]
+                    columns: [0, 1, 2]
                 }
             }
         ]
@@ -40,7 +40,7 @@
             {
                 extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                    columns: [0, 1, 2, 3]
                 },
                 customize: function (win) {
                     $(win.document.body).find('table').addClass('display').css('font-size', '16px');
@@ -54,13 +54,13 @@
                     $(win.document.body).find('h1').css('text-align', 'center');
                 },
                 printOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                    columns: [0, 1, 2, 3]
                 }
             },
             {
                 extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                    columns: [0, 1, 2, 3]
                 }
             }
         ]
@@ -73,7 +73,7 @@
             {
                 extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
                 exportOptions: {
-                    columns: [0, 1, 2]
+                    columns: [0, 1, 2, 3]
                 },
                 customize: function (win) {
                     $(win.document.body).find('table').addClass('display').css('font-size', '16px');
@@ -87,13 +87,13 @@
                     $(win.document.body).find('h1').css('text-align', 'center');
                 },
                 printOptions: {
-                    columns: [0, 1, 2]
+                    columns: [0, 1, 2, 3]
                 }
             },
             {
                 extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
                 exportOptions: {
-                    columns: [0, 1, 2]
+                    columns: [0, 1, 2, 3]
                 }
             }
         ]
@@ -106,7 +106,7 @@
             {
                 extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
                 customize: function (win) {
                     $(win.document.body).find('table').addClass('display').css('font-size', '16px');
@@ -120,13 +120,13 @@
                     $(win.document.body).find('h1').css('text-align', 'center');
                 },
                 printOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 }
             },
             {
                 extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 }
             }
         ]
@@ -139,7 +139,7 @@
             {
                 extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
                 customize: function (win) {
                     $(win.document.body).find('table').addClass('display').css('font-size', '16px');
@@ -153,13 +153,13 @@
                     $(win.document.body).find('h1').css('text-align', 'center');
                 },
                 printOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 }
             },
             {
                 extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                 }
             }
         ]
@@ -172,7 +172,7 @@
             {
                 extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 },
                 customize: function (win) {
                     $(win.document.body).find('table').addClass('display').css('font-size', '16px');
@@ -186,13 +186,13 @@
                     $(win.document.body).find('h1').css('text-align', 'center');
                 },
                 printOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 }
             },
             {
                 extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 }
             }
         ]
@@ -205,7 +205,7 @@
             {
                 extend: 'print', text: '<i class="fa fa-print"></i> PRINTO', className: 'printButton btn-inverse', autoPrint: true,
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 },
                 customize: function (win) {
                     $(win.document.body).find('table').addClass('display').css('font-size', '16px');
@@ -219,18 +219,18 @@
                     $(win.document.body).find('h1').css('text-align', 'center');
                 },
                 printOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 }
             },
             {
                 extend: "csv", text: '<i class="fa fa-file-excel-o"></i> EXCEL', className: "csvButton  btn-success",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6,7]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
                 }
             }
         ]
     });
-    
+
 
     $("#datepicker_from").datepicker({ format: 'mm-dd-yyyy' }).on("changeDate", function () {
         let id = $("#wareHouseDetailsId").val();
@@ -275,7 +275,17 @@
 
 
     $("#entryId").bootstrapValidator();
-    $("#exitId").bootstrapValidator(); 
+
+    $("#supplierCreateForm").bootstrapValidator();
+    $("#supplierEditForm").bootstrapValidator();
+
+    $("#warehouseCreateForm").bootstrapValidator();
+    $("#warehouseEditForm").bootstrapValidator();
+
+
+
+    $("#productsForm").bootstrapValidator();
+    $("#exitId").bootstrapValidator();
     $("#transferId").bootstrapValidator();
     $(".select-product").select();
     $("#hastvsh-select").select();

@@ -6,6 +6,14 @@
 
 
 <div class="card-box table-responsive">
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="col-md-12 alert alert-danger">
+            <span><b>Me vjen keq!</b> - @TempData["Error"]</span>
+        </div>
+    }
+
     <br />
     <div class="col-sm-12 " id="right-side" style="margin-top: 20px;">
 

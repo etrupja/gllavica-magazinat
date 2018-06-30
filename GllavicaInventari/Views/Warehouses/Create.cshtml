@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2 col-8">
         <div class="card-box">
-            <form role="form" asp-action="Create">
+            <form role="form" asp-action="Create" id="warehouseCreateForm">
                 <div class="form-group row">
                     <label class="col-4 col-form-label">Emri i magazinës<span class="text-danger">*</span></label>
                     <div class="col-7">
@@ -29,9 +29,9 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="hori-pass1" class="col-4 col-form-label"> Adresa magazinës <span class="text-danger">*</span></label>
+                    <label for="hori-pass1" class="col-4 col-form-label"> Adresa magazinës </label>
                     <div class="col-7">
-                        <input asp-for="Address" required class="form-control" placeholder="Kodi produktit...(opsional)" />
+                        <input asp-for="Address" class="form-control" placeholder="Kodi produktit...(opsional)" />
                     </div>
                 </div>
                 <div class="form-group row">

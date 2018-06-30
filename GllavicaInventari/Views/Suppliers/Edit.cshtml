@@ -15,29 +15,29 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2 col-8">
         <div class="card-box">
-            <form role="form" asp-action="Edit">
+            <form role="form" asp-action="Edit" id="supplierEditForm">
                 <div class="form-group row">
-                    <label class="col-4 col-form-label">Emri i furnitorit</label>
+                    <label class="col-4 col-form-label">Emri i furnitorit <span class="text-danger">*</span> </label>
                     <div class="col-7">
-                        <input asp-for="Name" class="form-control" placeholder="Psh. Gllavica Sh.p.k" />
+                        <input asp-for="Name" required class="form-control" placeholder="Psh. Gllavica Sh.p.k" />
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-4 col-form-label">Kontakt </label>
+                    <label class="col-4 col-form-label">Kontakt <span class="text-danger">*</span></label>
                     <div class="col-7">
-                        <input asp-for="Contact" class="form-control" placeholder="" />
+                        <input asp-for="Contact" required class="form-control" placeholder="" />
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="hori-pass1" class="col-4 col-form-label">Adresa furnitorit</label>
                     <div class="col-7">
-                        <input asp-for="Address" class="form-control" placeholder="Rruga Emri Rruges, Pallati x, Hyrja y" />
+                        <input asp-for="Address" class="form-control" placeholder="" />
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="pershkrimi" class="col-4 col-form-label">Pershkrimi furnitorit<span class="text-danger">*</span></label>
+                    <label for="pershkrimi" class="col-4 col-form-label">Pershkrimi furnitorit</label>
                     <div class="col-8">
-                        <input asp-for="Description" class="form-control" placeholder="Nje pershkrimi i shkurter per furnitorin (opsional)" />
+                        <input asp-for="Description" class="form-control" placeholder="" />
                     </div>
                 </div>
 
