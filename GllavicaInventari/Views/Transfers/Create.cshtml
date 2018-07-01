@@ -153,7 +153,6 @@
             //var validator =
             $('#transferId').data('bootstrapValidator').validate();
             //validator.validate();
-            console.log($('#transferId').data('bootstrapValidator').isValid());
             if ($('#transferId').data('bootstrapValidator').isValid()) {
                 document.getElementById("transferId").submit()
             }
@@ -224,25 +223,17 @@
             var productId = $('.productpack').last().find('.select-product').val()
             var amount = $('#quantityId').last().val();
 
-            console.log("Warehouse Id = " + fromWareHouseId + ", ProductId = " + productId + ", Amount = " + amount)
-
             if (amount && fromWareHouseId && productId) {
                 $.post("ConfirmTransfer", {
                     amount: $('#quantityId').last().val(),
                     productId: $('.productpack').last().find('.select-product').val(),
                     fromWareHouseId: $('#from-warehouse-select').val()
                 }, function (data) {
-                    //console.log("Gjendje = " + data + " , Sasia = ", amount);
                     if (data >= amount) {
                         $.Notification.notify('success', 'top center', 'Aprovuar!', "Ju do mbeteni me " + (data - amount) + " njesi ne gjendje!");
-                        //$("#btnAddItem").prop("disabled", false);
-                        //$("#btnSubmit").prop("disabled", false);
-
                     }
                     else {
                         $.Notification.notify('error', 'top center', 'Kujdes!', "Gjendja është " + data + " njësi!");
-                        //$("#btnAddItem").prop("disabled", true);
-                        //$("#btnSubmit").prop("disabled", true);
                     }
                 })
             }
