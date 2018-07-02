@@ -76,7 +76,7 @@ namespace GllavicaInventari.Data
                     IsActive = true
                     
                 };
-                await userManager.CreateAsync(adminUser, "!admin2018?");
+                await userManager.CreateAsync(adminUser, "admin2018?!");
                 await userManager.AddToRoleAsync(adminUser, "Admin");
             }
 

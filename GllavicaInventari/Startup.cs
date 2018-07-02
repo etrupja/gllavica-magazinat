@@ -26,7 +26,7 @@ namespace GllavicaInventari
         public void ConfigureServices(IServiceCollection services)
         {
             //string cString = @"Data Source=ERVIS-PC\SQLEXPRESS;Initial Catalog=GllavicaInventory;Integrated Security=True";
-            string cString = @"Server=70.32.28.3;Initial Catalog=gllavica-magazinat;Persist Security Info=False;User ID=gllavica_admin;Password=B5l5v_0k;";
+            string cString = @"Server=70.32.28.3;Initial Catalog=gllavica_inventari;Persist Security Info=False;User ID=gllavica-admin;Password=shpk2018?!;";
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(cString));
 
