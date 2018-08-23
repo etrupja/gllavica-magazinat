@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GllavicaInventari.Data;
 using GllavicaInventari.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace GllavicaInventari
 {
@@ -25,39 +29,54 @@ namespace GllavicaInventari
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //string cString = @"Data Source=ERVIS-PC\SQLEXPRESS;Initial Catalog=GllavicaInventory;Integrated Security=True";
-            string cString = @"Server=70.32.28.3;Initial Catalog=gllavica_inventari;Persist Security Info=False;User ID=gllavica-admin;Password=shpk2018?!;";
+           
 
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(cString));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
-            services.Configure<IdentityOptions>(options =>
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>();
+
+            //services.Configure<IdentityOptions>(options =>
+            //{
+            //    //password settings
+            //    options.Password.RequireDigit = false;
+            //    options.Password.RequiredLength = 8;
+            //    options.Password.RequireUppercase = false;
+            //    options.Password.RequireNonAlphanumeric = false;
+
+            //    //user settings
+            //    options.User.RequireUniqueEmail = false;
+
+            //    //lockout settings
+            //    options.Lockout.MaxFailedAccessAttempts = 5;
+            //    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+            //});
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.Cookie.HttpOnly = true;
+            //    options.Cookie.Expiration = TimeSpan.FromDays(5);
+            //    options.LoginPath = "/Account/Login";
+            //});
+            //services.AddDistributedMemoryCache();
+            //services.AddSession();
+            //services.AddDataProtection().DisableAutomaticKeyGeneration();
+
+            //services.AddMvc();
+            services.AddMemoryCache();
+            services.AddSession();
+            services.AddAuthentication(options =>
             {
-                //password settings
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 8;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-
-                //user settings
-                options.User.RequireUniqueEmail = false;
-
-                //lockout settings
-                options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             });
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Cookie.HttpOnly = true;
-                options.Cookie.Expiration = TimeSpan.FromDays(5);
-                options.LoginPath = "/Account/Login";
-            });
-            
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider services, AppDbContext context)
+        public void Configure(IApplicationBuilder app, 
+            IHostingEnvironment env, 
+            ILoggerFactory loggerFactory,
+            IServiceProvider services, 
+            AppDbContext context)
         {
             try
             {
@@ -78,8 +97,18 @@ namespace GllavicaInventari
             }
            
 
+            //app.UseStaticFiles();
+            //app.UseAuthentication();
+            //app.UseCookiePolicy();
+            //app.UseSession();
+
             app.UseStaticFiles();
+            app.UseSession();
             app.UseAuthentication();
+
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
+            loggerFactory.AddFile("~/Logs/mylog-{Date}.txt");
 
             app.UseMvc(routes =>
             {

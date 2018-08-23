@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using GllavicaInventari.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace GllavicaInventari.Controllers
 {
@@ -18,22 +19,27 @@ namespace GllavicaInventari.Controllers
     {
         private readonly AppDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<EntriesController> _logger;
 
         public EntriesController(
             AppDbContext context,
             SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager
+            UserManager<ApplicationUser> userManager,
+            ILogger<EntriesController> logger
             )
         {
             _context = context;
             _userManager = userManager;
+            _logger = logger;
         }
 
         // GET: Entries
         public async Task<IActionResult> Index(DateTime? dateStart, DateTime? dateEnd)
         {
+
             ApplicationUser loggedInUser = GetSignedInUser();
             var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser);
+            _logger.LogInformation($"{loggedInUser.FullName} Calling Index Action");
 
             if (!dateStart.HasValue)
                 dateStart = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
@@ -70,6 +76,8 @@ namespace GllavicaInventari.Controllers
         // GET: Entries/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            _logger.LogInformation($"Getting item {id}");
+
             if (id == null)
             {
                 return NotFound();
@@ -82,8 +90,10 @@ namespace GllavicaInventari.Controllers
                 .SingleOrDefaultAsync(m => m.Id == id & m.IsActive);
             if (entry == null)
             {
+                _logger.LogWarning($"Details({id}) NOT FOUND");
                 return NotFound();
             }
+            _logger.LogInformation($"Details({id}) item ready");
 
             return View(entry);
         }
@@ -114,8 +124,8 @@ namespace GllavicaInventari.Controllers
         {
             EntryViewModel entryVM = new EntryViewModel()
             {
-                Suppliers = _context.Suppliers.Where(n => n.IsActive).ToList(),
-                Products = _context.Products.Where(n => n.IsActive).ToList(),
+                Suppliers = _context.Suppliers.Where(n => n.IsActive).OrderBy(n => n.Name).ToList(),
+                Products = _context.Products.Where(n => n.IsActive).OrderBy(n => n.Title).ToList(),
                 SerialNumber = "",
                 BillNumber = ""
             };
@@ -145,15 +155,15 @@ namespace GllavicaInventari.Controllers
             if (nrproduct > 0)
             {
                 string[] quantities = Request.Form["Quantity[]"];
-                string[] idproduct = Request.Form["Product[]"]; 
-                string[] prices = Request.Form["Price[]"]; 
+                string[] idproduct = Request.Form["Product[]"];
+                string[] prices = Request.Form["Price[]"];
                 int supplierId = int.Parse(Request.Form["supplierid"]);
                 var warehouseId = int.Parse(Request.Form["warehouseid"]);
                 var billNumber = Request.Form["billnumber"].FirstOrDefault().ToString();
                 var documentnumber = Request.Form["documentnumber"].FirstOrDefault().ToString();
-                bool hasTVSH =Convert.ToBoolean(Request.Form["hastvsh"].FirstOrDefault());
+                bool hasTVSH = Convert.ToBoolean(Request.Form["hastvsh"].FirstOrDefault());
 
-                if (_context.Entries.Any(n=> n.SerialNumber == documentnumber))
+                if (_context.Entries.Any(n => n.SerialNumber == documentnumber))
                 {
                     TempData["Error"] = "Ky numer serial ekziston! Ju lutem kontrollojeni numrin përsëri!";
                     return RedirectToAction("Create");
@@ -200,8 +210,8 @@ namespace GllavicaInventari.Controllers
                 return NotFound();
             }
 
-            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive), "Id", "Title");
-            ViewData["Suppliers"] = new SelectList(_context.Suppliers.Where(n => n.IsActive), "Id", "Name");
+            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive).OrderBy(n => n.Title), "Id", "Title");
+            ViewData["Suppliers"] = new SelectList(_context.Suppliers.Where(n => n.IsActive).OrderBy(n => n.Name), "Id", "Name");
             ViewData["WareHouses"] = null;
 
             ApplicationUser loggedInUser = GetSignedInUser();
@@ -240,7 +250,7 @@ namespace GllavicaInventari.Controllers
                     oldEntry.TotalValue = Math.Round(entry.Amount * entry.Price, 2);
 
                     if (oldEntry.HasTVSH)
-                        oldEntry.TotalValueWithTVSH = Math.Round(oldEntry.TotalValue + oldEntry.TotalValue * 0.20,2);
+                        oldEntry.TotalValueWithTVSH = Math.Round(oldEntry.TotalValue + oldEntry.TotalValue * 0.20, 2);
                     else
                         oldEntry.TotalValueWithTVSH = oldEntry.TotalValue;
 
@@ -256,8 +266,8 @@ namespace GllavicaInventari.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive), "Id", "Title");
-            ViewData["Suppliers"] = new SelectList(_context.Suppliers.Where(n => n.IsActive), "Id", "Name");
+            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive).OrderBy(n => n.Title), "Id", "Title");
+            ViewData["Suppliers"] = new SelectList(_context.Suppliers.Where(n => n.IsActive).OrderBy(n => n.Name), "Id", "Name");
             ViewData["WareHouses"] = null;
 
             ApplicationUser loggedInUser = GetSignedInUser();

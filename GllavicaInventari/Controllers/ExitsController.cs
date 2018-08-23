@@ -107,7 +107,7 @@ namespace GllavicaInventari.Controllers
         {
             ExitsViewModel exitVM = new ExitsViewModel()
             {
-                Products = _context.Products.Where(n => n.IsActive).ToList(),
+                Products = _context.Products.Where(n => n.IsActive).OrderBy(n => n.Title).ToList(),
                 SerialNumber = DateTime.Now.ToString("yyyyMMddHHmmss")
             };
 
@@ -178,7 +178,7 @@ namespace GllavicaInventari.Controllers
             }
             return RedirectToAction("Index");
         }
-       
+
         // GET: Exits/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -192,8 +192,8 @@ namespace GllavicaInventari.Controllers
             {
                 return NotFound();
             }
-            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive), "Id", "Title", exit.ProductId);
-            ViewData["Suppliers"] = new SelectList(_context.Suppliers.Where(n => n.IsActive), "Id", "Name", exit.SupplierId);
+            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive).OrderBy(n => n.Title), "Id", "Title", exit.ProductId);
+            ViewData["Suppliers"] = new SelectList(_context.Suppliers.Where(n => n.IsActive).OrderBy(n => n.Name), "Id", "Name", exit.SupplierId);
             ViewData["WareHouses"] = null;
 
             ApplicationUser loggedInUser = GetSignedInUser();
@@ -251,8 +251,8 @@ namespace GllavicaInventari.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive), "Id", "Title");
-            ViewData["Suppliers"] = new SelectList(_context.Suppliers.Where(n => n.IsActive), "Id", "Name");
+            ViewData["Products"] = new SelectList(_context.Products.Where(n => n.IsActive).OrderBy(n => n.Title), "Id", "Title");
+            ViewData["Suppliers"] = new SelectList(_context.Suppliers.Where(n => n.IsActive).OrderBy(n => n.Name), "Id", "Name");
             ViewData["WareHouses"] = null;
 
             if ("manager".Equals(loggedInUserRole.First(), StringComparison.InvariantCultureIgnoreCase))

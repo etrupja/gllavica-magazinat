@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GllavicaInventari.Data;
 using GllavicaInventari.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GllavicaInventari.Controllers
 {
@@ -16,6 +17,8 @@ namespace GllavicaInventari.Controllers
         public int Id { get; set; }
         public string Value { get; set; }
     }
+
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly AppDbContext _context;
@@ -34,6 +37,7 @@ namespace GllavicaInventari.Controllers
                 .Products
                 .Where(n => n.IsActive)
                 .Include(n => n.Entries)
+                .OrderBy(n => n.Title)
                 .ToListAsync()
                 );
         }
