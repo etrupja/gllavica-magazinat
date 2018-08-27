@@ -111,17 +111,10 @@ namespace GllavicaInventari.Controllers
                 SerialNumber = DateTime.Now.ToString("yyyyMMddHHmmss")
             };
 
-            ApplicationUser loggedInUser = GetSignedInUser();
+            var loggedInUser = GetSignedInUser();
             var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser);
 
-            if ("manager".Equals(loggedInUserRole.First(), StringComparison.InvariantCultureIgnoreCase))
-            {
-                exitVM.Warehouses = _context.Warehouses.Where(n => n.ApplicationUserId == loggedInUser.Id & n.IsActive);
-            }
-            else
-            {
-                exitVM.Warehouses = _context.Warehouses.Where(n => n.IsActive);
-            }
+            exitVM.Warehouses = "manager".Equals(loggedInUserRole.First(), StringComparison.InvariantCultureIgnoreCase) ? _context.Warehouses.Where(n => n.ApplicationUserId == loggedInUser.Id & n.IsActive) : _context.Warehouses.Where(n => n.IsActive);
 
             return View(exitVM);
         }
@@ -136,26 +129,22 @@ namespace GllavicaInventari.Controllers
             {
                 string[] quantities = Request.Form["Quantity[]"];
                 string[] idproduct = Request.Form["Product[]"];
-                string[] prices = Request.Form["Price[]"];
-                string[] TVSHs = Request.Form["TVSH[]"];
+                //string[] prices = Request.Form["Price[]"];
+                //string[] TVSHs = Request.Form["TVSH[]"];
                 var warehouseId = int.Parse(Request.Form["warehouseid"]);
                 //int supplierId = int.Parse(Request.Form["supplierid"]);
                 var documentnumber = Request.Form["documentnumber"].First().ToString();
-                bool hasTVSH = Convert.ToBoolean(Request.Form["hastvsh"].FirstOrDefault());
+                //bool hasTVSH = Convert.ToBoolean(Request.Form["hastvsh"].FirstOrDefault());
 
                 for (int i = 0; i < nrproduct; i++)
                 {
                     double amount = double.Parse(quantities[i]);
-                    double price = double.Parse(prices[i]);
                     int productId = Int32.Parse(idproduct[i]);
+                    double lastPrice = _context.Entries.Where(n => n.ProductId == productId)
+                        .OrderByDescending(n => n.DateEntry).Select(n=>n.Price).FirstOrDefault(); //double.Parse(prices[i]);
 
-                    int supplierId = _context.Entries
-                       .Where(n => n.ProductId == productId)
-                       .Include(n => n.Supplier)
-                       .Select(n => n.SupplierId)
-                       .FirstOrDefault();
+                    int supplierId = _context.Entries.Where(n => n.ProductId == productId).Include(n => n.Supplier).Select(n => n.SupplierId).FirstOrDefault();
 
-                    Product product = _context.Products.FirstOrDefault(n => n.Id == productId);
 
                     Exit newExit = new Exit()
                     {
@@ -164,10 +153,10 @@ namespace GllavicaInventari.Controllers
                         ProductId = productId,
                         SupplierId = supplierId,
                         Amount = amount,
-                        Price = price,
-                        TotalValue = amount * price,
-                        HasTVSH = hasTVSH,
-                        TotalValueWithTVSH = (hasTVSH) ? Math.Round(amount * price + amount * price * .20, 2) : Math.Round(amount * price, 2),
+                        Price = lastPrice,
+                        TotalValue = amount * lastPrice,
+                        HasTVSH = false,
+                        TotalValueWithTVSH = Math.Round(amount * lastPrice, 2),// ? Math.Round(amount * price + amount * price * .20, 2) : Math.Round(amount * price, 2),
                         LoggedInUserId = GetSignedInUser().Id,
                         LoggedInUserFullName = GetSignedInUser().FullName,
                         DateExit = DateTime.UtcNow.AddHours(2)
@@ -226,18 +215,18 @@ namespace GllavicaInventari.Controllers
                 try
                 {
                     //Find the old exit
-                    Exit oldExit = _context.Exits.Where(n => n.Id == exit.Id & n.IsActive).FirstOrDefault();
-                    oldExit.ProductId = exit.ProductId;
-                    oldExit.Amount = exit.Amount;
-                    oldExit.Price = exit.Price;
-                    oldExit.TotalValue = Math.Round(exit.Amount * exit.Price, 2);
+                    Exit oldExit = _context.Exits.FirstOrDefault(n => n.Id == exit.Id & n.IsActive);
+                    if (oldExit != null)
+                    {
+                        oldExit.ProductId = exit.ProductId;
+                        oldExit.Amount = exit.Amount;
+                        oldExit.Price = exit.Price;
+                        oldExit.TotalValue = Math.Round(exit.Amount * exit.Price, 2);
 
-                    Product product = _context.Products.FirstOrDefault(n => n.Id == exit.ProductId);
+                        Product product = _context.Products.FirstOrDefault(n => n.Id == exit.ProductId);
 
-                    if (oldExit.HasTVSH)
-                        oldExit.TotalValueWithTVSH = Math.Round(oldExit.TotalValue + oldExit.TotalValue * 0.20, 2);
-                    else
-                        oldExit.TotalValueWithTVSH = oldExit.TotalValue;
+                        oldExit.TotalValueWithTVSH = oldExit.HasTVSH ? Math.Round(oldExit.TotalValue + oldExit.TotalValue * 0.20, 2) : oldExit.TotalValue;
+                    }
 
                     await _context.SaveChangesAsync();
                 }
