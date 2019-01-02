@@ -98,8 +98,11 @@ namespace GllavicaInventari
                     template: "{controller=Stock}/{action=Details}/{id}/{dateStart}/{dateEnd}");
                 routes.MapRoute(
                     name: "stockindex",
-                    template: "{controller=Stock}/{action=Index}/{id?}");
-               
+                    template: "{controller=Stock}/{action=Index}/{year?}");
+                //routes.MapRoute(
+                //    name: "stockindex",
+                //    template: "{controller=Stock}/{action=Index}/{id?}");
+
             });
         }
     }

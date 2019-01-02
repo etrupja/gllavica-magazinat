@@ -24,7 +24,6 @@
                     <tr>
                         <th>Nr. i serisë</th>
                         <th>Produkti</th>
-                        @*<th>Magazinieri </th>*@
                         <th>Hyrje/Dalje</th>
                         <th>Njesia</th>
                         <th>Sasia</th>
@@ -44,9 +43,6 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Product.Title)
                         </td>
-                        @*<td>
-                            @Html.DisplayFor(modelItem => item.LoggedInUserFullName)
-                        </td>*@
                         <td>
                             <span class="label label-success">Hyrje</span>
                             @switch ((DateTime.UtcNow.AddHours(2).Date - item.DateEntry.Date).TotalDays)
@@ -91,9 +87,6 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Product.Title)
                         </td>
-                        @*<td>
-                            @Html.DisplayFor(modelItem => item.LoggedInUserFullName)
-                        </td>*@
                         <td>
                             <span class="label label-danger">Dalje</span>
                             @switch ((DateTime.UtcNow.AddHours(2).Date - item.DateExit.Date).TotalDays)
@@ -136,9 +129,6 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.ProductName)
                         </td>
-                        @*<td>
-                            <span>-</span>
-                        </td>*@
                         <td>
                             <span class="label label-warning">Stok</span>
                         </td>

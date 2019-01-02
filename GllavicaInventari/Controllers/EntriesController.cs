@@ -71,7 +71,7 @@ namespace GllavicaInventari.Controllers
             }
         }
 
-
+        
 
         // GET: Entries/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -322,5 +322,44 @@ namespace GllavicaInventari.Controllers
             => _userManager
             .Users
             .FirstOrDefault(a => a.Email == User.Identity.Name);
+
+
+
+        public async Task<IActionResult> EntriesReport()
+        {
+
+            ApplicationUser loggedInUser = GetSignedInUser();
+            var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser);
+            _logger.LogInformation($"{loggedInUser.FullName} Calling Index Action");
+
+            DateTime dateStart = new DateTime(2018, 01, 01);
+            DateTime dateEnd = new DateTime(2018, 12, 31).AddHours(23).AddMinutes(59).AddSeconds(59);
+
+            ViewBag.DateStart = dateStart;
+            ViewBag.DateEnd = dateEnd;
+
+            if ("manager".Equals(loggedInUserRole.First(), StringComparison.InvariantCultureIgnoreCase))
+            {
+                var entries = _context
+                    .Entries
+                    .Where(n => n.LoggedInUserId == loggedInUser.Id && n.IsActive && n.DateEntry >= dateStart && n.DateEntry <= dateEnd)
+                    .Include(e => e.Supplier)
+                    .Include(n => n.Product)
+                    .Include(e => e.WareHouse);
+                return View(await entries.ToListAsync());
+            }
+            else
+            {
+                var entries = _context
+                    .Entries
+                    .Where(n => n.IsActive && n.DateEntry >= dateStart && n.DateEntry <= dateEnd.AddHours(23).AddMinutes(59).AddSeconds(59))
+                    .Include(e => e.Supplier)
+                    .Include(e => e.WareHouse)
+                    .Include(n => n.Product);
+                return View(await entries.ToListAsync());
+            }
+        }
+
+
     }
 }

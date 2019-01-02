@@ -51,7 +51,7 @@ namespace GllavicaInventari.Controllers
                     var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Index", "Stock");
+                        return RedirectToAction("Index", "Entries");
                     }
                 }
 

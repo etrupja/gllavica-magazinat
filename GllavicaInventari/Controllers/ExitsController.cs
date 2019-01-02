@@ -289,9 +289,44 @@ namespace GllavicaInventari.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> ExitsReport()
+        {
+            ApplicationUser loggedInUser = GetSignedInUser();
+            var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser);
+
+            DateTime dateStart = new DateTime(2018, 1, 1);
+            DateTime dateEnd = new DateTime(2018, 12, 31).AddHours(23).AddMinutes(59).AddSeconds(59);
+
+            ViewBag.DateStart = dateStart;
+            ViewBag.DateEnd = dateEnd;
+
+
+            if ("manager".Equals(loggedInUserRole.First(), StringComparison.InvariantCultureIgnoreCase))
+            {
+                var exits = _context
+                    .Exits
+                    .Where(n => n.LoggedInUserId == loggedInUser.Id & n.IsActive && n.DateExit >= dateStart && n.DateExit <= dateEnd)
+                    .Include(e => e.Product)
+                    .Include(e => e.Supplier)
+                    .Include(e => e.WareHouse);
+                return View(await exits.ToListAsync());
+            }
+            else
+            {
+                var exits = _context
+                    .Exits
+                    .Where(n => n.IsActive && n.DateExit >= dateStart && n.DateExit <= dateEnd)
+                    .Include(e => e.Product)
+                    .Include(e => e.Supplier)
+                    .Include(e => e.WareHouse);
+                return View(await exits.ToListAsync());
+            }
+        }
+
+
         private bool ExitExists(int id)
         {
-            return _context.Exits.Where(n => n.IsActive).Any(e => e.Id == id);
+            return _context.Exits.Where(n => n.IsActive && n.DateExit.Year == DateTime.Today.Year).Any(e => e.Id == id);
         }
 
         [HttpPost]
@@ -303,12 +338,13 @@ namespace GllavicaInventari.Controllers
 
         public double GetStateAmount(ExitViewModel model)
         {
+            int thisYear = DateTime.Today.Year;
             var entriesSum = _context.Entries
-                .Where(n => n.ProductId == model.productId & n.WareHouseId == model.warehouseId & n.IsActive)
+                .Where(n => n.ProductId == model.productId & n.WareHouseId == model.warehouseId & n.DateEntry.Year == thisYear & n.IsActive)
                 .Select(n => n.Amount)
                 .Sum();
             var exitsSum = _context.Exits
-                .Where(n => n.ProductId == model.productId & n.WareHouseId == model.warehouseId & n.IsActive)
+                .Where(n => n.ProductId == model.productId & n.WareHouseId == model.warehouseId & n.DateExit.Year == thisYear & n.IsActive)
                 .Select(n => n.Amount)
                 .Sum();
 
@@ -318,12 +354,13 @@ namespace GllavicaInventari.Controllers
 
         public double GetAvailableAmount(int productId, int warehouseId)
         {
+            int thisYear = DateTime.Today.Year;
             var entriesSum = _context.Entries
-               .Where(n => n.ProductId == productId & n.WareHouseId == warehouseId & n.IsActive)
+               .Where(n => n.ProductId == productId & n.WareHouseId == warehouseId & n.DateEntry.Year == thisYear & n.IsActive)
                .Select(n => n.Amount)
                .Sum();
             var exitsSum = _context.Exits
-                .Where(n => n.ProductId == productId & n.WareHouseId == warehouseId & n.IsActive)
+                .Where(n => n.ProductId == productId & n.WareHouseId == warehouseId & n.DateExit.Year == thisYear & n.IsActive)
                 .Select(n => n.Amount)
                 .Sum();
 

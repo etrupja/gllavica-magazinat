@@ -1,0 +1,84 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<GllavicaInventari.Models.Entry>
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Lista e Hyrjeve - 2018";
+}
+
+<h3 class="text-center">
+    Hyrjet për vitin <b>2018.</b>
+</h3>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card-box table-responsive">
+            <hr />
+            <table id="EntriesTable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nr. i Serisë </th>
+                        <th>Nr. fatures </th>
+                        <th>Magazina </th>
+                        <th>Produkti </th>
+                        <th>Hyrja</th>
+                        <th>Sasia</th>
+                        <th>Cmimi</th>
+                        <th>Totali </th>
+                        <th>Furnitori</th>
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                        {
+                            <th>Magazinieri</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="BillDetails" asp-route-id="@item.SerialNumber">
+                                    <b>@item.SerialNumber</b>
+                                </a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BillNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.WareHouse.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.Title)
+                            </td>
+                            <td>
+                                @item.DateEntry.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Amount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalValue)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Supplier.Name)
+                            </td>
+                            @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                            {
+                                <td>
+                                    @item.LoggedInUserFullName
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Content/assets/js/jquery.min.js"></script>
+}

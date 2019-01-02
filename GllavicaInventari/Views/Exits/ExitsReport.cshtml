@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model IEnumerable<GllavicaInventari.Models.Exit>
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Lista e të gjitha daljeve";
+}
+
+<h3>
+    Daljet për vitin <b>2018.</b>
+</h3>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card-box table-responsive">
+            <hr />
+            <table id="ExitsTable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nr. i Serise. </th>
+                        <th>Magazina </th>
+                        <th>Produkti </th>
+                        <th>Data Daljes</th>
+                        <th>Sasia</th>
+                        <th>Cmimi</th>
+                        <th>Vlera </th>
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                        {
+                            <th>Magazinieri</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="BillDetails" asp-route-id="@item.SerialNumber">
+                                    <b>@item.SerialNumber</b>
+                                </a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.WareHouse.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.Title)
+                            </td>
+                            <td>
+                                @item.DateExit.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Amount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalValue)
+                            </td>
+                            @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                            {
+                                <td>
+                                    @item.LoggedInUserFullName
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

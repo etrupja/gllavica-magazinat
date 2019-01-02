@@ -1,4 +1,5 @@
-﻿@model IEnumerable<GllavicaInventari.ViewModels.StockViewModel>
+﻿@using GllavicaInventari.ViewModels
+@model IEnumerable<StockViewModel>
 
 @{
     ViewData["Title"] = "Te gjithe magazinat";
@@ -7,28 +8,25 @@
 <div class="row">
     @foreach (var warehouse in Model)
     {
-    <a class="card-box widget-box-1 col-md-10 col-md-offset-1 col-xs-12 col-lg-10 col-lg-offset-1" asp-action="Details" asp-route-id="@warehouse.Id">
-        <p>
-            @if (string.IsNullOrEmpty(warehouse.Description))
-            {
-                <h4 class="font-18 pull-left"> - </h4>
-            }
-            else
-            {
-                <h4 class="font-18 pull-left">@warehouse.Description</h4>
-            }
-            <h4 class="font-18 pull-right">@warehouse.ManagerFullName</h4>
-        </p>
-        
-        <h2 class="text-primary text-center">@warehouse.Name</h2>
-        <p class="text-muted">
-            Nga @(new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).ToString("dd/MM/yyyy"))
-            <span class="pull-right">
-                <span class="text-success">Hyrje: @warehouse.EntriesCount</span>
-                /
-                <span class="text-danger">Dalje: @warehouse.ExitsCount</span>
-            </span>
-        </p>
-    </a>
+        @if (@warehouse.StockYear == "2018")
+         {
+             <a class="card-box widget-box-1 col-md-10 col-md-offset-1 col-xs-12 col-lg-10 col-lg-offset-1" asp-action="StockReport" asp-route-id="@warehouse.Id">
+                 <p>
+                     <h4 class="font-18 pull-right">@warehouse.ManagerFullName</h4>
+                 </p>
+
+                 <h2 class="text-primary text-center">Raport @warehouse.Name - @warehouse.StockYear</h2>
+             </a>
+        }
+         else
+         {
+             <a class="card-box widget-box-1 col-md-10 col-md-offset-1 col-xs-12 col-lg-10 col-lg-offset-1" asp-action="Details" asp-route-id="@warehouse.Id">
+                 <p>
+                     <h4 class="font-18 pull-right">@warehouse.ManagerFullName</h4>
+                 </p>
+
+                 <h2 class="text-primary text-center">Raport @warehouse.Name - @warehouse.StockYear</h2>
+             </a>
+         }
     }
 </div>
